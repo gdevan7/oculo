@@ -32,3 +32,6 @@ If DATABASE_URL is unset, the API uses a temporary in-memory catalog. PostgreSQL
 - DELETE /api/glasses/:id
 
 Before exposing catalog write endpoints publicly, add authentication and rate limits. Never commit secrets.
+
+## 3D models
+Frames can be procedural (`frameModel.js`) or a GLB file referenced by `model_url` (see `frontend/public/models/ATTRIBUTION.md` for the bundled model, its license status and how to add more). If a GLB fails to load, the app falls back to the procedural frame of the same `style`. An existing Docker volume keeps its old data: to get the new `bold-black` row either recreate the volume (`docker compose down -v`) or insert it manually.

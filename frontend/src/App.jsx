@@ -5,7 +5,8 @@ import {getGlasses} from "./services/api.js";
 const fallback=[
 {id:"classic-black",name:"Classic Black",description:"Bold acetate, everyday style.",frame_color:"#202124",style:"classic"},
 {id:"round-titanium",name:"Round Titanium",description:"Lightweight and understated.",frame_color:"#9CA3AF",style:"round"},
-{id:"modern-amber",name:"Modern Amber",description:"A warmer modern statement.",frame_color:"#9A5B35",style:"amber"}];
+{id:"modern-amber",name:"Modern Amber",description:"A warmer modern statement.",frame_color:"#9A5B35",style:"amber"},
+{id:"bold-black",name:"Bold Black",description:"Thick black acetate, full 3D model.",frame_color:"#111111",style:"classic",model_url:"/models/black-acetate.glb"}];
 export default function App(){
 const[catalog,setCatalog]=useState(fallback),[id,setId]=useState(fallback[0].id),[api,setApi]=useState("Loading catalog");
 const selected=catalog.find(g=>g.id===id)||catalog[0];
