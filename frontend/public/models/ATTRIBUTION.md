@@ -9,11 +9,12 @@ Required by `AGENTS.md`: every bundled asset must have its source and usage righ
 | Used by | catalog item `bold-black` ("Bold Black") |
 | Source | Supplied by the project author as `tripo_texture.glb`; the node names (`tripo_node_...`) show it was generated with Tripo (AI 3D generation) |
 | License | **NOT CONFIRMED.** Usage rights for Tripo output depend on the plan and terms in force when the file was generated. The project author must check them and record the result here before this model is deployed or shared beyond the capstone review. |
-| Trademark note | The texture contains a small script mark baked onto the lower-right lens, and the frame shape resembles a well-known commercial design. Review both (and consider painting the mark out of the texture) before any public release. |
+| Trademark note | The frame shape resembles a well-known commercial design. Review this before any public release. The logo sticker that came with the original file has been removed (see below). |
 
 ### Modifications made to the original file
 
-- Mesh simplified from about 985,000 to 29,561 triangles with meshoptimizer (through glTF-Transform), so it can be rendered in real time next to MediaPipe. UVs and normals of the kept vertices are unchanged.
+- Removed the logo sticker: a separate, thin mesh piece (about 19,900 triangles, roughly 10 x 18 mm) floating at the lower corner of one lens, carrying the script logo. Its texture area (used by no other triangle) was painted over with the atlas fill colour, so no logo remains in the file.
+- Mesh then simplified from about 965,000 to 28,965 triangles with meshoptimizer (through glTF-Transform), so it can be rendered in real time next to MediaPipe. UVs and normals of the kept vertices are unchanged.
 - Texture downscaled from 4096x4096 to 2048x2048 JPEG (quality 88).
 - `EXT_meshopt_compression` and `KHR_mesh_quantization` removed, so the file loads with the plain `GLTFLoader` (no decoder needed).
 - No other geometry edits. The original 5.7 MB file is not stored in this repository.
