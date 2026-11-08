@@ -11,14 +11,9 @@ const fallback=[
 ];
 
 function normalizeCatalog(items) {
-  const remote = Array.isArray(items) ? items : [];
-  const normalized = remote.map((item) => {
-    // Existing database rows may predate the GLB asset and still contain model_url=null.
-    if (item.id === "bold-black" && !item.model_url) {
-      return { ...item, model_url: "/models/black-acetate.glb" };
-    }
-    return item;
-  });
+  const normalized = items.map((item) => item.id === "bold-black" && !item.model_url
+    ? { ...item, model_url: "/models/black-acetate.glb" }
+    : item);
   for (const item of fallback) {
     if (!normalized.some((remoteItem) => remoteItem.id === item.id)) normalized.push(item);
   }
@@ -27,10 +22,8 @@ function normalizeCatalog(items) {
 
 export default function App(){
   const[catalog,setCatalog]=useState(fallback);
-  // Open on the actual GLB item so the asset is visible immediately, not hidden behind
-  // the procedural Classic Black demo frame.
   const[id,setId]=useState("bold-black");
-  const[api,setApi]=useState("Loading catalog");
+  const[api,setApi]=useState("Demo catalog");
   const selected=catalog.find(g=>g.id===id)||catalog[0];
 
   useEffect(()=>{
