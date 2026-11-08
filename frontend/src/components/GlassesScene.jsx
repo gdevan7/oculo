@@ -106,12 +106,16 @@ export default function GlassesScene({ glasses, trackRef, enabled }) {
         if (glasses?.model_url) {
           // Selama GLB dimuat, pivot tersembunyi (model masih null). Gagal muat -> bingkai prosedural.
           loadGlbFrame(glasses.model_url)
-            .then((m) => {
+            .then((loadedModel) => {
               if (dead || mine !== loadToken) return;
-              model = m;
-              holder.add(m);
+              model = loadedModel;
+              holder.add(loadedModel);
+              console.info(`[Virtual Try-On] GLB loaded: ${glasses.model_url}`);
             })
-            .catch(useProcedural);
+            .catch((error) => {
+              console.error(`[Virtual Try-On] Failed to load GLB: ${glasses.model_url}`, error);
+              useProcedural();
+            });
         } else if (glasses) {
           useProcedural();
         }
