@@ -1,27 +1,37 @@
 # Virtual Glasses Try-On 3D
 
-Capstone Design MVP: webcam-based virtual eyewear try-on with React, Three.js, MediaPipe Face Landmarker, Express, and PostgreSQL.
+Capstone Design MVP: webcam-based virtual eyewear try-on with React, Three.js, MediaPipe Face Landmarker, Express, and an optional PostgreSQL catalog.
 
 ## Features
-- Bright white UI with cobalt blue accents.
-- Camera permission requested only after clicking Start camera.
-- Client-side face tracking; webcam frames and landmarks are not sent to the backend.
-- Three selectable frame styles rendered with procedural Three.js geometry.
+- Browser-based virtual try-on using MediaPipe Face Landmarker.
+- GLB frame loading through Three.js, with per-model orientation presets and geometry-based size normalization.
+- Procedural frames remain available as fallbacks for catalog items without a GLB.
 - Express REST API for catalog CRUD.
-- PostgreSQL schema and Docker Compose.
+- Optional PostgreSQL persistence.
 - Screenshot download and camera stop control.
 
-> Starter project: the 3D frame geometry is procedural placeholder geometry, not a photorealistic licensed GLB model. Face pose mapping and alignment require real-device calibration. Performance targets are not measured results.
-
 ## Run locally
-Requirements: Node.js 20+, Docker (recommended), modern browser.
+Requirements: Node.js 20+ and a modern browser. Docker/PostgreSQL are optional.
 
-1. Start database: `docker compose up -d db`
-2. API: `cd backend && cp .env.example .env && npm install && npm run dev`
-3. Frontend in another terminal: `cd frontend && npm install && npm run dev`
-4. Open the Vite URL. Camera access requires localhost or HTTPS.
+1. Start the API:
+   `cd backend && npm install && npm run dev`
+2. In another terminal, start the frontend:
+   `cd frontend && npm install && npm run dev`
+3. Open the Vite URL, normally `http://localhost:5173`.
+4. Select **Bold Black · GLB 3D model** and start the camera.
 
-If DATABASE_URL is unset, the API uses a temporary in-memory catalog. PostgreSQL is needed for persistence.
+If `DATABASE_URL` is unset, the API uses an in-memory catalog. No database setup is required for a local demo. Camera access requires localhost or HTTPS, and the first run needs internet access to download the MediaPipe runtime/model.
+
+## Existing PostgreSQL database
+The SQL seed now updates the `model_url` of existing catalog rows. Apply the updated `backend/sql/schema.sql` to the existing database, or run this targeted migration:
+
+```sql
+UPDATE glasses
+SET model_url = '/models/black-acetate.glb', updated_at = NOW()
+WHERE id = 'bold-black';
+```
+
+Then restart the API and verify that `GET /api/glasses` returns `bold-black` with that `model_url`.
 
 ## API
 - GET /api/health
@@ -32,3 +42,6 @@ If DATABASE_URL is unset, the API uses a temporary in-memory catalog. PostgreSQL
 - DELETE /api/glasses/:id
 
 Before exposing catalog write endpoints publicly, add authentication and rate limits. Never commit secrets.
+
+## 3D models
+The bundled model and its attribution/license notes are documented in `frontend/public/models/ATTRIBUTION.md`. Only `black-acetate.glb` currently has an orientation preset and is connected to the **Bold Black** catalog item. Other catalog items still use procedural geometry. Confirm the model's license/usage terms before public deployment.

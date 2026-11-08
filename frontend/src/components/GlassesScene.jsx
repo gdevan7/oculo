@@ -1,6 +1,7 @@
 import { useEffect, useRef } from "react";
 import * as THREE from "three";
 import { buildFrame } from "./frameModel.js";
+import { loadGlbFrame, disposeGlbCache } from "./glbFrame.js";
 
 // Jarak sudut luar mata (landmark 33 <-> 263) dalam mm. Tuning di sini bila
 // kacamata terasa terlalu besar/kecil (rentang wajar 85-95).
@@ -50,6 +51,8 @@ export default function GlassesScene({ glasses, trackRef, enabled }) {
     let curKey = "";
     let raf = 0;
     let first = true;
+    let loadToken = 0; // membatalkan hasil muat GLB yang sudah usang (ganti frame cepat)
+    let dead = false;
 
     const resize = () => {
       const w = el.clientWidth || 1;
@@ -68,11 +71,14 @@ export default function GlassesScene({ glasses, trackRef, enabled }) {
     const disposeModel = () => {
       if (!model) return;
       holder.remove(model);
-      model.traverse((o) => {
-        o.geometry?.dispose();
-        if (Array.isArray(o.material)) o.material.forEach((m) => m.dispose());
-        else o.material?.dispose();
-      });
+      // Model GLB memakai aset bersama (cache); dibebaskan di disposeGlbCache().
+      if (!model.userData.sharedAssets) {
+        model.traverse((o) => {
+          o.geometry?.dispose();
+          if (Array.isArray(o.material)) o.material.forEach((m) => m.dispose());
+          else o.material?.dispose();
+        });
+      }
       model = null;
     };
 
@@ -85,14 +91,34 @@ export default function GlassesScene({ glasses, trackRef, enabled }) {
     const loop = () => {
       const { glasses, enabled } = props.current;
       const t = trackRef.current;
-      const k = glasses ? `${glasses.id}|${glasses.style}|${glasses.frame_color}` : "";
+      const k = glasses
+        ? `${glasses.id}|${glasses.style}|${glasses.frame_color}|${glasses.model_url || ""}`
+        : "";
       if (k !== curKey) {
         disposeModel();
-        if (glasses) {
+        curKey = k;
+        const mine = ++loadToken;
+        const useProcedural = () => {
+          if (dead || mine !== loadToken) return;
           model = buildFrame(glasses.style, glasses.frame_color);
           holder.add(model);
+        };
+        if (glasses?.model_url) {
+          // Selama GLB dimuat, pivot tersembunyi (model masih null). Gagal muat -> bingkai prosedural.
+          loadGlbFrame(glasses.model_url)
+            .then((loadedModel) => {
+              if (dead || mine !== loadToken) return;
+              model = loadedModel;
+              holder.add(loadedModel);
+              console.info(`[Virtual Try-On] GLB loaded: ${glasses.model_url}`);
+            })
+            .catch((error) => {
+              console.error(`[Virtual Try-On] Failed to load GLB: ${glasses.model_url}`, error);
+              useProcedural();
+            });
+        } else if (glasses) {
+          useProcedural();
         }
-        curKey = k;
       }
 
       const ok = Boolean(enabled && model && t?.lm && t?.matrix);
@@ -124,9 +150,11 @@ export default function GlassesScene({ glasses, trackRef, enabled }) {
     loop();
 
     return () => {
+      dead = true;
       cancelAnimationFrame(raf);
       obs.disconnect();
       disposeModel();
+      disposeGlbCache();
       occluder.geometry.dispose();
       occluder.material.dispose();
       renderer.dispose();
