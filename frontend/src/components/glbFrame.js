@@ -1,39 +1,25 @@
 import * as THREE from "three";
 import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
 
-// Memuat bingkai kacamata dari file GLB dan menormalkannya ke ruang yang sama
-// dengan frameModel.js: milimeter, +X kanan, +Y atas, +Z ke arah kamera, dan
-// bidang depan bingkai berada di z = 0.
-//
-// Setiap file GLB punya orientasi dan skala sendiri, jadi tiap file butuh satu
-// entri preset di bawah. Nilainya diukur dari mesh (bukan ditebak):
-//   modelWidth  lebar bingkai di sumbu lebarnya (satuan model)
-//   widthMm     lebar bingkai depan sebenarnya (mm), menentukan ukuran di wajah
-//   rotY        putaran sumbu Y agar bagian depan menghadap +Z
-//   frontPlane  posisi bidang depan sepanjang sumbu depan model (satuan model)
-//   yOffsetMm   geser vertikal (mm); positif = kacamata naik
+// Preset menyimpan orientasi sumber dan lebar fisik bingkai.
+// Setelah orientasi diterapkan, posisi dan skala dihitung dari bounding box aktual.
 const PRESETS = {
-  // Model asli: lebar di sumbu Z (1.0), depan di +X, gagang ke -X, atas di +Y.
   "black-acetate.glb": {
-    modelWidth: 1.0,
     widthMm: 145,
     rotY: -Math.PI / 2,
-    frontPlane: 0.35,
     yOffsetMm: 0,
   },
 };
-const DEFAULT_PRESET = PRESETS["black-acetate.glb"];
 
 const loader = new GLTFLoader();
-const cache = new Map(); // url -> Promise<THREE.Group> (scene asli, dibagi oleh semua klon)
+const cache = new Map();
 
-// Hanya path di origin yang sama atau URL https. Frame kamera tidak pernah dikirim ke mana pun.
 export function isSafeModelUrl(url) {
-  if (typeof url !== "string" || !url) return false;
+  if (typeof url !== "string" || !url.trim()) return false;
   if (url.startsWith("/") && !url.startsWith("//")) return true;
   try {
-    const u = new URL(url, window.location.href);
-    return u.origin === window.location.origin || u.protocol === "https:";
+    const parsed = new URL(url, window.location.href);
+    return parsed.origin === window.location.origin || parsed.protocol === "https:";
   } catch {
     return false;
   }
@@ -41,63 +27,87 @@ export function isSafeModelUrl(url) {
 
 function load(url) {
   if (!cache.has(url)) {
-    const p = loader
-      .loadAsync(url)
-      .then((gltf) => {
-        gltf.scene.traverse((o) => {
-          if (!o.isMesh) return;
-          o.frustumCulled = false;
-          const mats = Array.isArray(o.material) ? o.material : [o.material];
-          for (const m of mats) {
-            // Hasil ekspor memakai roughness 0.9 (terlalu kusam untuk asetat).
-            if ("roughness" in m) m.roughness = Math.min(m.roughness, 0.45);
-            if ("metalness" in m) m.metalness = 0;
-            if (m.map) m.map.anisotropy = 4;
-          }
-        });
-        return gltf.scene;
-      })
-      .catch((e) => {
-        cache.delete(url);
-        throw e;
+    const promise = loader.loadAsync(url).then((gltf) => {
+      const root = gltf.scene;
+      root.traverse((object) => {
+        if (!object.isMesh) return;
+        object.frustumCulled = false;
+        const materials = Array.isArray(object.material) ? object.material : [object.material];
+        for (const material of materials) {
+          if (!material) continue;
+          if ("roughness" in material) material.roughness = Math.min(material.roughness, 0.45);
+          if ("metalness" in material) material.metalness = 0;
+          if (material.map) material.map.anisotropy = 4;
+          material.needsUpdate = true;
+        }
       });
-    cache.set(url, p);
+      return root;
+    }).catch((error) => {
+      cache.delete(url);
+      throw error;
+    });
+    cache.set(url, promise);
   }
   return cache.get(url);
 }
 
 export async function loadGlbFrame(url) {
-  if (!isSafeModelUrl(url)) throw new Error("Unsupported model URL");
-  const scene = await load(url);
-  const file = url.split("?")[0].split("/").pop();
-  const preset = PRESETS[file] || DEFAULT_PRESET;
-  const s = preset.widthMm / preset.modelWidth;
+  if (!isSafeModelUrl(url)) throw new Error(`Unsafe GLB model URL: ${url}`);
 
-  const inner = scene.clone(true); // geometri dan material dibagi, bukan disalin
-  inner.rotation.y = preset.rotY;
-  inner.position.set(0, preset.yOffsetMm / s, -preset.frontPlane);
+  const source = await load(url);
+  const filename = url.split("?")[0].split("/").pop();
+  const preset = PRESETS[filename];
+  if (!preset) throw new Error(`No orientation preset configured for GLB: ${filename}`);
 
-  const group = new THREE.Group();
-  group.add(inner);
-  group.scale.setScalar(s);
-  group.userData.sharedAssets = true; // jangan di-dispose per instance
-  return group;
+  // Clone the hierarchy so each fitting-room instance can have its own transform.
+  const model = source.clone(true);
+  model.rotation.set(0, preset.rotY, 0);
+  model.updateMatrixWorld(true);
+
+  // Normalize using the real, rotated geometry bounds instead of assuming the
+  // source file's dimensions are exact. This prevents off-center/oversized exports.
+  const bounds = new THREE.Box3().setFromObject(model);
+  if (bounds.isEmpty()) throw new Error(`GLB contains no renderable geometry: ${filename}`);
+
+  const size = new THREE.Vector3();
+  const center = new THREE.Vector3();
+  bounds.getSize(size);
+  bounds.getCenter(center);
+  if (!Number.isFinite(size.x) || size.x <= 0) {
+    throw new Error(`GLB has invalid width: ${filename}`);
+  }
+
+  const scale = preset.widthMm / size.x;
+  model.position.set(
+    -center.x,
+    -center.y + preset.yOffsetMm / scale,
+    -bounds.max.z
+  );
+
+  const normalized = new THREE.Group();
+  normalized.add(model);
+  normalized.scale.setScalar(scale);
+  normalized.userData.sharedAssets = true;
+  normalized.userData.sourceUrl = url;
+  normalized.userData.physicalWidthMm = preset.widthMm;
+  return normalized;
 }
 
-// Panggil saat scene dilepas: membebaskan geometri, material, dan tekstur yang di-cache.
+// Shared geometry/material/texture hanya dibebaskan saat scene pemilik cache dilepas.
 export function disposeGlbCache() {
-  for (const p of cache.values()) {
-    p.then((scene) =>
-      scene.traverse((o) => {
-        if (!o.isMesh) return;
-        o.geometry?.dispose();
-        const mats = Array.isArray(o.material) ? o.material : [o.material];
-        for (const m of mats) {
-          m.map?.dispose();
-          m.dispose();
-        }
-      })
-    ).catch(() => {});
-  }
+  const pending = [...cache.values()];
   cache.clear();
+  for (const promise of pending) {
+    promise.then((scene) => {
+      scene.traverse((object) => {
+        if (!object.isMesh) return;
+        object.geometry?.dispose();
+        const materials = Array.isArray(object.material) ? object.material : [object.material];
+        for (const material of materials) {
+          material?.map?.dispose();
+          material?.dispose();
+        }
+      });
+    }).catch(() => {});
+  }
 }
