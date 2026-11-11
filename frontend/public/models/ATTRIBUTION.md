@@ -4,9 +4,9 @@ The three GLB files listed below were supplied by the project author for this Vi
 
 | File | Catalog item | Description |
 | --- | --- | --- |
-| model-0-blue.glb | Blue | Blue frame with translucent blue lenses |
-| model-1-tortoiseshell.glb | Tortoiseshell | Brown tortoiseshell frame with smoke-grey lenses |
-| model-2-black.glb | Matte Black | Matte black frame with smoke-grey lenses |
+| model_0_blue.glb | Blue | Blue frame with translucent blue lenses |
+| model_1_tortoiseshell.glb | Tortoiseshell | Brown tortoiseshell frame with smoke-grey lenses |
+| model_2_black.glb | Matte Black | Matte black frame with smoke-grey lenses |
 
 ## Source and usage rights
 
