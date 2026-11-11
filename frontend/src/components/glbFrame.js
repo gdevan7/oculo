@@ -2,9 +2,9 @@ import * as THREE from "three";
 import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
 
 const PRESETS = {
-  "model-0-blue.glb": { widthMm: 140, rotation: new THREE.Matrix4().set(0,1,0,0, 0,0,1,0, 1,0,0,0, 0,0,0,1) },
-  "model-1-tortoiseshell.glb": { widthMm: 140, rotation: new THREE.Matrix4() },
-  "model-2-black.glb": { widthMm: 140, rotation: new THREE.Matrix4().makeRotationY(-Math.PI / 2) }
+  "model_0_blue.glb": { widthMm: 140, rotation: new THREE.Matrix4().set(0,1,0,0, 0,0,1,0, 1,0,0,0, 0,0,0,1) },
+  "model_1_tortoiseshell.glb": { widthMm: 140, rotation: new THREE.Matrix4() },
+  "model_2_black.glb": { widthMm: 140, rotation: new THREE.Matrix4().makeRotationY(-Math.PI / 2) }
 };
 const loader = new GLTFLoader();
 const cache = new Map();
