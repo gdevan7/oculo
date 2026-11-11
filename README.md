@@ -18,7 +18,7 @@ Requirements: Node.js 20+ and a modern browser. Docker/PostgreSQL are optional.
 2. In another terminal, start the frontend:
    `cd frontend && npm install && npm run dev`
 3. Open the Vite URL, normally `http://localhost:5173`.
-4. Select **Bold Black · GLB 3D model** and start the camera.
+4. Select **White · GLB 3D model** and start the camera.
 
 If `DATABASE_URL` is unset, the API uses an in-memory catalog. No database setup is required for a local demo. Camera access requires localhost or HTTPS, and the first run needs internet access to download the MediaPipe runtime/model.
 
@@ -27,11 +27,11 @@ The SQL seed now updates the `model_url` of existing catalog rows. Apply the upd
 
 ```sql
 UPDATE glasses
-SET model_url = '/models/black-acetate.glb', updated_at = NOW()
-WHERE id = 'bold-black';
+SET model_url = '/models/model_2_black.glb', updated_at = NOW()
+WHERE id = 'black';
 ```
 
-Then restart the API and verify that `GET /api/glasses` returns `bold-black` with that `model_url`.
+Then restart the API and verify that `GET /api/glasses` returns `black` with that `model_url`.
 
 ## API
 - GET /api/health
@@ -44,4 +44,4 @@ Then restart the API and verify that `GET /api/glasses` returns `bold-black` wit
 Before exposing catalog write endpoints publicly, add authentication and rate limits. Never commit secrets.
 
 ## 3D models
-The bundled model and its attribution/license notes are documented in `frontend/public/models/ATTRIBUTION.md`. Only `black-acetate.glb` currently has an orientation preset and is connected to the **Bold Black** catalog item. Other catalog items still use procedural geometry. Confirm the model's license/usage terms before public deployment.
+The three supplied GLB models and their attribution/license notes are documented in `frontend/public/models/ATTRIBUTION.md`. All three models are connected to the White, Tortoiseshell, and Matte Black catalog items. Confirm the models' license/usage terms before public deployment.
