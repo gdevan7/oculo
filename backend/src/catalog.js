@@ -1,7 +1,7 @@
 export const seed = [
- {id:"blue",name:"Blue",description:"Blue frame with translucent blue lenses.",frame_color:"#1A4FD1",style:"classic",model_url:"/models/model-0-blue.glb",active:true},
- {id:"tortoiseshell",name:"Tortoiseshell",description:"Classic brown tortoiseshell frame with smoke lenses.",frame_color:"#663A22",style:"classic",model_url:"/models/model-1-tortoiseshell.glb",active:true},
- {id:"black",name:"Matte Black",description:"Minimal matte black frame with smoke lenses.",frame_color:"#111111",style:"classic",model_url:"/models/model-2-black.glb",active:true}
+ {id:"blue",name:"Blue",description:"Blue frame with translucent blue lenses.",frame_color:"#1A4FD1",style:"classic",model_url:"/models/model_0_blue.glb",active:true},
+ {id:"tortoiseshell",name:"Tortoiseshell",description:"Classic brown tortoiseshell frame with smoke lenses.",frame_color:"#663A22",style:"classic",model_url:"/models/model_1_tortoiseshell.glb",active:true},
+ {id:"black",name:"Matte Black",description:"Minimal matte black frame with smoke lenses.",frame_color:"#111111",style:"classic",model_url:"/models/model_2_black.glb",active:true}
 ];
 export function validate(item, partial=false) {
  const errors=[], allowed=["id","name","description","frame_color","style","model_url","active"];
