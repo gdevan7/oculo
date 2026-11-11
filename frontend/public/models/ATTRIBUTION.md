@@ -1,30 +1,21 @@
-# 3D model attribution and license
+# Supplied 3D model assets
 
-Required by `AGENTS.md`: every bundled asset must have its source and usage rights documented.
+The three GLB files listed below were supplied by the project author for this Virtual Glasses Try-On project. They replace the previous demo/procedural frames.
 
-## black-acetate.glb
+| File | Catalog item | Description |
+| --- | --- | --- |
+| model-0-blue.glb | Blue | Blue frame with translucent blue lenses |
+| model-1-tortoiseshell.glb | Tortoiseshell | Brown tortoiseshell frame with smoke-grey lenses |
+| model-2-black.glb | Matte Black | Matte black frame with smoke-grey lenses |
 
-| Field | Value |
-| --- | --- |
-| Used by | catalog item `bold-black` ("Bold Black") |
-| Source | Supplied by the project author as `tripo_texture.glb`; the node names (`tripo_node_...`) show it was generated with Tripo (AI 3D generation) |
-| License | **NOT CONFIRMED.** Usage rights for Tripo output depend on the plan and terms in force when the file was generated. The project author must check them and record the result here before this model is deployed or shared beyond the capstone review. |
-| Trademark note | The frame shape resembles a well-known commercial design. Review this before any public release. The logo sticker that came with the original file has been removed (see below). |
+## Source and usage rights
 
-### Modifications made to the original file
+Source: supplied directly by the project author. Original creator, generation tool, and license/usage rights were not provided. Confirm permission to use and publicly distribute these assets before deployment.
 
-- Removed the logo sticker: a separate, thin mesh piece (about 19,900 triangles, roughly 10 x 18 mm) floating at the lower corner of one lens, carrying the script logo. Its texture area (used by no other triangle) was painted over with the atlas fill colour, so no logo remains in the file.
-- Mesh then simplified from about 965,000 to 28,965 triangles with meshoptimizer (through glTF-Transform), so it can be rendered in real time next to MediaPipe. UVs and normals of the kept vertices are unchanged.
-- Texture downscaled from 4096x4096 to 2048x2048 JPEG (quality 88).
-- `EXT_meshopt_compression` and `KHR_mesh_quantization` removed, so the file loads with the plain `GLTFLoader` (no decoder needed).
-- No other geometry edits. The original 5.7 MB file is not stored in this repository.
+## Model handling
 
-### Orientation and size (measured, see `frontend/src/components/glbFrame.js`)
+The application preserves the GLB geometry, materials, and textures. Only root orientation and scale transforms are applied for face fitting. The initial normalization target is 140 mm frame width, an assumed adult-frame size rather than a measured product specification.
 
-Original axes: frame width on Z (1.0 unit), front faces +X, temples run toward -X, up is +Y. The loader rotates it by -90 degrees about Y so the front faces the camera, scales it so the front measures 145 mm, and places the front plane at z = 0. The 145 mm width is an assumption for a typical adult frame, not a measured product dimension; adjust `widthMm` if a different fit is wanted.
+## Orientation
 
-## Adding another model
-
-1. Put the `.glb` in this folder and add a row to this file (source, license, changes).
-2. Measure its axes and add a preset to `PRESETS` in `glbFrame.js` (`modelWidth`, `widthMm`, `rotY`, `frontPlane`, `yOffsetMm`). A file without a preset is treated with the `black-acetate.glb` preset, which is wrong for most models.
-3. Add the catalog row with `model_url` set to `/models/<file>.glb` (`backend/src/catalog.js`, `backend/sql/schema.sql`, and the fallback list in `frontend/src/App.jsx`).
+The three source files use different coordinate axes. Their orientation presets are configured in frontend/src/components/glbFrame.js. Verify all three in the browser from front and side views before release.
