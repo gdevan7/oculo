@@ -11,7 +11,7 @@ const fallback=[
 
 export default function App(){
   const[catalog,setCatalog]=useState(fallback);
-  const[id,setId]=useState("blue");
+  const[id,setId]=useState("white");
   const[api,setApi]=useState("Bundled 3D collection");
   const selected=catalog.find(g=>g.id===id)||catalog[0];
 
