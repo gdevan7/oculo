@@ -5,10 +5,10 @@ CREATE TABLE IF NOT EXISTS glasses (
   created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(), updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
-DELETE FROM glasses WHERE id NOT IN ('blue', 'tortoiseshell', 'black');
+DELETE FROM glasses WHERE id NOT IN ('white', 'tortoiseshell', 'black');
 
 INSERT INTO glasses (id,name,description,frame_color,style,model_url,active) VALUES
- ('blue','Blue','Blue frame with translucent blue lenses.','#1A4FD1','classic','/models/model_0_blue.glb',TRUE),
+ ('white','White','White frame with clear lenses.','#FFFFFF','classic','/models/model_0_white.glb',TRUE),
  ('tortoiseshell','Tortoiseshell','Classic brown tortoiseshell frame with smoke lenses.','#663A22','classic','/models/model_1_tortoiseshell.glb',TRUE),
  ('black','Matte Black','Minimal matte black frame with smoke lenses.','#111111','classic','/models/model_2_black.glb',TRUE)
 ON CONFLICT (id) DO UPDATE SET name=EXCLUDED.name, description=EXCLUDED.description,
