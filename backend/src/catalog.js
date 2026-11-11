@@ -1,8 +1,7 @@
 export const seed = [
- {id:"classic-black",name:"Classic Black",description:"Bold acetate, everyday style.",frame_color:"#202124",style:"classic",model_url:null,active:true},
- {id:"round-titanium",name:"Round Titanium",description:"Lightweight round frame.",frame_color:"#9CA3AF",style:"round",model_url:null,active:true},
- {id:"modern-amber",name:"Modern Amber",description:"Warm contemporary frame.",frame_color:"#9A5B35",style:"amber",model_url:null,active:true},
- {id:"bold-black",name:"Bold Black",description:"Thick black acetate, full 3D model.",frame_color:"#111111",style:"classic",model_url:"/models/black-acetate.glb",active:true}
+ {id:"blue",name:"Blue",description:"Blue frame with translucent blue lenses.",frame_color:"#1A4FD1",style:"classic",model_url:"/models/model-0-blue.glb",active:true},
+ {id:"tortoiseshell",name:"Tortoiseshell",description:"Classic brown tortoiseshell frame with smoke lenses.",frame_color:"#663A22",style:"classic",model_url:"/models/model-1-tortoiseshell.glb",active:true},
+ {id:"black",name:"Matte Black",description:"Minimal matte black frame with smoke lenses.",frame_color:"#111111",style:"classic",model_url:"/models/model-2-black.glb",active:true}
 ];
 export function validate(item, partial=false) {
  const errors=[], allowed=["id","name","description","frame_color","style","model_url","active"];
