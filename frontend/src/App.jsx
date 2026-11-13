@@ -4,9 +4,9 @@ import CameraStage from "./components/CameraStage.jsx";
 import { getGlasses } from "./services/api.js";
 
 const fallback = [
-  { id: "white", name: "Cloud", subtitle: "Everyday Essential", description: "A clean, lightweight frame for an effortless everyday look.", frame_color: "#F2F0E9", style: "classic", model_url: "/models/model_0_white.glb", price: "$49" },
-  { id: "tortoiseshell", name: "Frankie", subtitle: "Modern Tortoise", description: "Warm tortoiseshell details with a timeless silhouette.", frame_color: "#70452F", style: "tortoise", model_url: "/models/model_1_tortoiseshell.glb", price: "$59" },
-  { id: "black", name: "Monroe", subtitle: "Classic Black", description: "A confident black frame that goes with just about everything.", frame_color: "#171717", style: "black", model_url: "/models/model_2_black.glb", price: "$55" }
+  { id: "white", name: "Cloud", subtitle: "Everyday Essential", description: "A clean, lightweight frame for an effortless everyday look.", frame_color: "#F2F0E9", style: "classic", model_url: "/models/model_0_white.glb", price: "Try-on ready" },
+  { id: "tortoiseshell", name: "Frankie", subtitle: "Modern Tortoise", description: "Warm tortoiseshell details with a timeless silhouette.", frame_color: "#70452F", style: "tortoise", model_url: "/models/model_1_tortoiseshell.glb", price: "Try-on ready" },
+  { id: "black", name: "Monroe", subtitle: "Classic Black", description: "A confident black frame that goes with just about everything.", frame_color: "#171717", style: "black", model_url: "/models/model_2_black.glb", price: "Try-on ready" }
 ];
 
 function ProductArtwork({ item }) {
@@ -82,7 +82,7 @@ function TryOnModal({ product, catalog, onClose, onSelect }) {
             <p className="option-description">Preview the supplied 3D model and its original lens finish.</p>
           </div>
           <div className="modal-bottom">
-            <div className="modal-price"><span>SELECTED FRAME</span><strong>{product.price}</strong></div>
+            <div className="modal-price"><span>FRAME STATUS</span><strong>{product.price}</strong></div>
             <button className="modal-done-button" onClick={onClose}>Done <ArrowRight size={16}/></button>
           </div>
         </aside>
