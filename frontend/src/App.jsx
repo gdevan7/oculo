@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { ArrowRight, Check, ChevronDown, Glasses, Heart, HelpCircle, ShieldCheck, Sparkles, X } from "lucide-react";
 import CameraStage from "./components/CameraStage.jsx";
+import ProductModelPreview from "./components/ProductModelPreview.jsx";
 import { getGlasses } from "./services/api.js";
 
 const fallback = [
@@ -8,38 +9,6 @@ const fallback = [
   { id: "tortoiseshell", name: "Frankie", subtitle: "Modern Tortoise", description: "Warm tortoiseshell details with a timeless silhouette.", frame_color: "#70452F", style: "tortoise", model_url: "/models/model_1_tortoiseshell.glb", price: "Try-on ready" },
   { id: "black", name: "Monroe", subtitle: "Classic Black", description: "A confident black frame that goes with just about everything.", frame_color: "#171717", style: "black", model_url: "/models/model_2_black.glb", price: "Try-on ready" }
 ];
-
-function ProductArtwork({ item }) {
-  const tortoise = item.id === "tortoiseshell";
-  const white = item.id === "white";
-  const frame = white ? "#E8E3D9" : tortoise ? "#65402D" : "#17191D";
-  const accent = white ? "#B8B1A4" : tortoise ? "#B77B45" : "#45484E";
-  return (
-    <svg className="product-artwork" viewBox="0 0 520 330" role="img" aria-label={item.name + " glasses product image"}>
-      <defs>
-        <linearGradient id={"lens-" + item.id} x1="0" y1="0" x2="0.9" y2="1">
-          <stop offset="0" stopColor={white ? "#B7C8D0" : "#343B43"} stopOpacity=".78" />
-          <stop offset="1" stopColor={white ? "#687D88" : "#111820"} stopOpacity=".96" />
-        </linearGradient>
-        <filter id={"shadow-" + item.id} x="-20%" y="-30%" width="140%" height="170%">
-          <feGaussianBlur stdDeviation="10" />
-        </filter>
-      </defs>
-      <ellipse cx="260" cy="251" rx="170" ry="15" fill="#172033" opacity=".12" filter={"url(#shadow-" + item.id + ")"} />
-      <g transform={tortoise ? "rotate(-2 260 165)" : "rotate(1 260 165)"} strokeLinecap="round" strokeLinejoin="round">
-        <path d="M44 113 Q91 83 147 102 L174 113 L166 136 Q154 158 132 177 L101 187 Q69 185 56 163 Q44 142 44 113Z" fill={"url(#lens-" + item.id + ")"} stroke={frame} strokeWidth="13"/>
-        <path d="M476 113 Q429 83 373 102 L346 113 L354 136 Q366 158 388 177 L419 187 Q451 185 464 163 Q476 142 476 113Z" fill={"url(#lens-" + item.id + ")"} stroke={frame} strokeWidth="13"/>
-        <path d="M174 119 Q260 98 346 119" fill="none" stroke={frame} strokeWidth="12"/>
-        <path d="M44 119 Q20 104 9 116" fill="none" stroke={frame} strokeWidth="12"/>
-        <path d="M476 119 Q500 104 511 116" fill="none" stroke={frame} strokeWidth="12"/>
-        <path d="M61 111 Q104 91 147 107" fill="none" stroke={accent} strokeWidth="3" opacity=".75"/>
-        <path d="M373 107 Q416 91 459 111" fill="none" stroke={accent} strokeWidth="3" opacity=".75"/>
-        {tortoise && <g fill="#C18A53" opacity=".8"><circle cx="75" cy="105" r="4"/><circle cx="98" cy="178" r="3"/><circle cx="438" cy="104" r="4"/><circle cx="414" cy="178" r="3"/></g>}
-        <path d="M180 120 Q260 108 340 120" fill="none" stroke={accent} strokeWidth="2" opacity=".65"/>
-      </g>
-    </svg>
-  );
-}
 
 function TryOnModal({ product, catalog, onClose, onSelect }) {
   useEffect(() => {
@@ -122,7 +91,7 @@ export default function App() {
         <div className="product-grid">
           {catalog.map((item, index) => (
             <article className="product-card" key={item.id}>
-              <div className={"product-image product-image-" + item.id}><span className="product-index">0{index + 1}</span><button className="product-favorite" aria-label={"Save " + item.name}><Heart size={19}/></button><ProductArtwork item={item}/><span className="product-image-caption">FRAME STUDIO · {item.subtitle.toUpperCase()}</span></div>
+              <div className={"product-image product-image-" + item.id}><span className="product-index">0{index + 1}</span><button className="product-favorite" aria-label={"Save " + item.name}><Heart size={19}/></button><ProductModelPreview item={item}/><span className="product-image-caption">FRAME STUDIO · {item.subtitle.toUpperCase()}</span></div>
               <div className="product-card-info"><div><span className="product-category">SUNGLASSES</span><h3>{item.name}</h3><p>{item.description}</p></div><strong className="product-price">{item.price}</strong></div>
               <div className="product-card-bottom"><div className="product-swatches"><span className={"style-swatch swatch-" + item.id}/><span className="swatch-muted"/><span className="swatch-muted light"/></div><button className="tryon-button" onClick={() => setActiveProduct(item)}>Try on <ArrowRight size={15}/></button></div>
             </article>
