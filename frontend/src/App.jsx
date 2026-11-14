@@ -40,6 +40,54 @@ const fallback = [
       { id: "rose-gold", name: "Rose Gold", hex: "#B98278", model_url: "/models/model-2/model_2_rose_gold.glb" },
       { id: "silver", name: "Silver", hex: "#AEB5BC", model_url: "/models/model-2/model_2_silver.glb" }
     ]
+  },
+{
+    id: "model-3", name: "Noir", subtitle: "Contemporary Acetate",
+    description: "A versatile silhouette with four distinctive finishes.",
+    frame_color: "#17191D", style: "classic", color_id: "black-lens",
+    model_url: "/models/model-3/model_3_black_lens.glb", price: "Try-on ready",
+    colors: [
+      { id: "black-lens", name: "Black Lens", hex: "#24272B", model_url: "/models/model-3/model_3_black_lens.glb" },
+      { id: "burgundy-wine", name: "Burgundy Wine", hex: "#713747", model_url: "/models/model-3/model_3_burgundy_wine.glb" },
+      { id: "havana-brown", name: "Havana Brown", hex: "#80563A", model_url: "/models/model-3/model_3_havana_brown.glb" },
+      { id: "ivory-cream", name: "Ivory Cream", hex: "#D9CDB7", model_url: "/models/model-3/model_3_ivory_cream.glb" }
+    ]
+  },
+  {
+    id: "model-4", name: "Browline", subtitle: "Refined Browline",
+    description: "A defined browline profile with contrasting metal details.",
+    frame_color: "#59402F", style: "tortoise", color_id: "browline-merged",
+    model_url: "/models/model-4/model_4_browline_merged.glb", price: "Try-on ready",
+    colors: [
+      { id: "browline-merged", name: "Classic Browline", hex: "#4D4037", model_url: "/models/model-4/model_4_browline_merged.glb" },
+      { id: "brown-gold", name: "Brown Gold", hex: "#87603C", model_url: "/models/model-4/model_4_brown_gold.glb" },
+      { id: "burgundy-rose-gold", name: "Burgundy Rose Gold", hex: "#783E50", model_url: "/models/model-4/model_4_burgundy_rose_gold.glb" },
+      { id: "navy-silver", name: "Navy Silver", hex: "#34465D", model_url: "/models/model-4/model_4_navy_silver.glb" }
+    ]
+  },
+  {
+    id: "model-5", name: "Heritage", subtitle: "Modern Browline",
+    description: "A second browline design with a distinct frame construction.",
+    frame_color: "#5B4638", style: "tortoise", color_id: "browline",
+    model_url: "/models/model-5/model_5_browline.glb", price: "Try-on ready",
+    colors: [
+      { id: "browline", name: "Browline", hex: "#4B3B30", model_url: "/models/model-5/model_5_browline.glb" },
+      { id: "brown-gold", name: "Brown Gold", hex: "#87603C", model_url: "/models/model-5/model_5_brown_gold.glb" },
+      { id: "burgundy-rose-gold", name: "Burgundy Rose Gold", hex: "#783E50", model_url: "/models/model-5/model_5_burgundy_rose_gold.glb" },
+      { id: "navy-silver", name: "Navy Silver", hex: "#34465D", model_url: "/models/model-5/model_5_navy_silver.glb" }
+    ]
+  },
+  {
+    id: "model-6", name: "Evergreen", subtitle: "Everyday Metal",
+    description: "A clean everyday frame in understated natural tones.",
+    frame_color: "#202326", style: "classic", color_id: "black",
+    model_url: "/models/model-6/model_6_black.glb", price: "Try-on ready",
+    colors: [
+      { id: "black", name: "Black", hex: "#202326", model_url: "/models/model-6/model_6_black.glb" },
+      { id: "forest-green", name: "Forest Green", hex: "#435B4A", model_url: "/models/model-6/model_6_forest_green.glb" },
+      { id: "gunmetal-grey", name: "Gunmetal Grey", hex: "#697178", model_url: "/models/model-6/model_6_gunmetal_grey.glb" },
+      { id: "havana-brown", name: "Havana Brown", hex: "#806044", model_url: "/models/model-6/model_6_havana_brown.glb" }
+    ]
   }
 ];
 
@@ -124,11 +172,11 @@ export default function App() {
 
       <section className="catalog-hero">
         <div className="catalog-hero-copy"><span className="eyebrow"><Sparkles size={14}/> THE VIRTUAL EYEWEAR STUDIO</span><h1>Find the frame<br/>that feels like <em>you.</em></h1><p>Explore the collection, then see how your favorite frames look on you. A better fit starts with a try.</p><a className="hero-link" href="#collection">Explore the collection <ArrowRight size={16}/></a></div>
-        <div className="catalog-hero-visual"><div className="hero-visual-glow"/><div className="hero-visual-label"><span>THE EVERYDAY EDIT</span><strong>Three frames. Your point of view.</strong></div><div className="hero-visual-glasses"><Glasses size={180} strokeWidth={1.05}/></div><span className="hero-visual-index">01 / 03</span></div>
+        <div className="catalog-hero-visual"><div className="hero-visual-glow"/><div className="hero-visual-label"><span>THE EVERYDAY EDIT</span><strong>Seven frames. Your point of view.</strong></div><div className="hero-visual-glasses"><Glasses size={180} strokeWidth={1.05}/></div><span className="hero-visual-index">01 / 07</span></div>
       </section>
 
       <section className="catalog-section" id="collection">
-        <div className="catalog-section-heading"><div><span className="eyebrow">CURATED FOR YOU</span><h2>The frame collection</h2><p>Three signature styles. Find the one that fits your look.</p></div><span className="catalog-count">01 — 03 <ChevronDown size={14}/></span></div>
+        <div className="catalog-section-heading"><div><span className="eyebrow">CURATED FOR YOU</span><h2>The frame collection</h2><p>Seven signature frames. Find the one that fits your look.</p></div><span className="catalog-count">01 — 07 <ChevronDown size={14}/></span></div>
         <div className="product-grid">
           {catalog.map((item, index) => (
             <article className="product-card" key={item.id}>
