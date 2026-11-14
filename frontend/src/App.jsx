@@ -202,7 +202,20 @@ function TryOnModal({ product, onClose, onSelect }) {
 
 export default function App() {
   const [catalog, setCatalog] = useState(fallback);
-  const [activeProduct, setActiveProduct] = useState(null);\n  const [consentProduct, setConsentProduct] = useState(null);\n\n  const requestTryOn = (item) => {\n    const accepted = window.localStorage.getItem(CAMERA_CONSENT_KEY) === "accepted";\n    if (accepted) setActiveProduct(item);\n    else setConsentProduct(item);\n  };\n\n  const acceptCameraConsent = () => {\n    window.localStorage.setItem(CAMERA_CONSENT_KEY, "accepted");\n    setActiveProduct(consentProduct);\n    setConsentProduct(null);\n  };
+  const [activeProduct, setActiveProduct] = useState(null);
+  const [consentProduct, setConsentProduct] = useState(null);
+
+  const requestTryOn = (item) => {
+    const accepted = window.localStorage.getItem(CAMERA_CONSENT_KEY) === "accepted";
+    if (accepted) setActiveProduct(item);
+    else setConsentProduct(item);
+  };
+
+  const acceptCameraConsent = () => {
+    window.localStorage.setItem(CAMERA_CONSENT_KEY, "accepted");
+    setActiveProduct(consentProduct);
+    setConsentProduct(null);
+  };
 
   useEffect(() => {
     let live = true;
@@ -242,7 +255,8 @@ export default function App() {
       <section className="how-section" id="how-it-works"><div className="how-icon"><Sparkles size={22}/></div><div><span className="eyebrow">A FITTING ROOM, ANYWHERE</span><h2>See it before you choose it.</h2><p>Select a frame, open the virtual fitting room, and let the camera place the 3D glasses on your face in real time.</p></div><div className="how-steps"><span><b>01</b> Choose a frame</span><span><b>02</b> Open Try-on</span><span><b>03</b> Find your fit</span></div></section>
 
       <footer className="catalog-footer" id="about"><a className="catalog-brand" href="#"><span className="catalog-brand-icon"><Glasses size={20}/></span><span>frame<span>studio</span></span></a><span>VIRTUAL GLASSES TRY-ON · MVP</span><span><ShieldCheck size={14}/> Camera processing stays in your browser</span></footer>
-      {consentProduct && <CameraConsent onAgree={acceptCameraConsent} onDisagree={() => setConsentProduct(null)}/>}\n      {activeProduct && <TryOnModal product={activeProduct} onSelect={setActiveProduct} onClose={() => setActiveProduct(null)}/>}
+      {consentProduct && <CameraConsent onAgree={acceptCameraConsent} onDisagree={() => setConsentProduct(null)}/>}
+      {activeProduct && <TryOnModal product={activeProduct} onSelect={setActiveProduct} onClose={() => setActiveProduct(null)}/>}
     </main>
   );
 }
