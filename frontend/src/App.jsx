@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { ArrowRight, Check, CheckCircle2, ChevronDown, Glasses, Heart, HelpCircle, ShieldCheck, Sparkles, X } from "lucide-react";
+import { ArrowRight, Check, CheckCircle2, ChevronDown, Glasses, HelpCircle, ShieldCheck, Sparkles, UserRound, X } from "lucide-react";
 import CameraStage from "./components/CameraStage.jsx";
 import ProductModelPreview from "./components/ProductModelPreview.jsx";
 import { getGlasses } from "./services/api.js";
@@ -204,6 +204,9 @@ export default function App() {
   const [catalog, setCatalog] = useState(fallback);
   const [activeProduct, setActiveProduct] = useState(null);
   const [consentProduct, setConsentProduct] = useState(null);
+  const [page, setPage] = useState("home");
+  const [showLogin, setShowLogin] = useState(false);
+  const [scrollToAbout, setScrollToAbout] = useState(false);
 
   const requestTryOn = (item) => {
     const accepted = window.localStorage.getItem(CAMERA_CONSENT_KEY) === "accepted";
@@ -218,6 +221,13 @@ export default function App() {
   };
 
   useEffect(() => {
+    if (page === "home" && scrollToAbout) {
+      document.getElementById("about")?.scrollIntoView({ behavior: "smooth", block: "start" });
+      setScrollToAbout(false);
+    }
+  }, [page, scrollToAbout]);
+
+  useEffect(() => {
     let live = true;
     getGlasses().then((data) => {
       if (!live || !Array.isArray(data)) return;
@@ -226,46 +236,101 @@ export default function App() {
     return () => { live = false; };
   }, []);
 
+
   return (
     <main className="catalog-page">
       <header className="catalog-header">
-        <a className="catalog-brand" href="#" aria-label="Frame Studio home"><span className="catalog-brand-icon"><Glasses size={23}/></span><span>frame<span>studio</span></span></a>
-        <nav className="catalog-nav"><a className="nav-active" href="#collection">Sunglasses</a><a href="#how-it-works">Virtual try-on</a><a href="#about">About</a></nav>
-        <button className="header-help" onClick={() => document.getElementById("how-it-works")?.scrollIntoView({ behavior: "smooth" })}><HelpCircle size={19}/><span>How it works</span></button>
+        <button className="catalog-brand" onClick={() => { setPage("home"); setScrollToAbout(false); window.scrollTo({ top: 0, behavior: "smooth" }); }} aria-label="Frame Studio home">
+          <span className="catalog-brand-icon"><Glasses size={23}/></span><span>frame<span>studio</span></span>
+        </button>
+        <nav className="catalog-nav" aria-label="Main navigation">
+          <button className={page === "catalog" ? "nav-active" : ""} onClick={() => { setScrollToAbout(false); setPage("catalog"); window.scrollTo({ top: 0, behavior: "smooth" }); }}>Catalog</button>
+          <button className={page === "home" ? "nav-active" : ""} onClick={() => { setScrollToAbout(false); setPage("home"); window.scrollTo({ top: 0, behavior: "smooth" }); }}>Home</button>
+          <button onClick={() => { if (page === "home") document.getElementById("about")?.scrollIntoView({ behavior: "smooth" }); else { setScrollToAbout(true); setPage("home"); } }}>About</button>
+        </nav>
+        <button className="header-profile" onClick={() => setShowLogin(true)} aria-label="Open login"><UserRound size={19}/></button>
       </header>
 
-      <section className="catalog-hero">
-        <div className="catalog-hero-copy"><span className="eyebrow"><Sparkles size={14}/> THE VIRTUAL EYEWEAR STUDIO</span><h1>Find the frame<br/>that feels like <em>you.</em></h1><p>Explore the collection, then see how your favorite frames look on you. A better fit starts with a try.</p><a className="hero-link" href="#collection">Explore the collection <ArrowRight size={16}/></a></div>
-        <div className="catalog-hero-visual"><img className="catalog-hero-person" src="/images/catalog-hero-portrait.jpg" alt="Person wearing eyeglasses in the Frame Studio collection"/></div>
-      </section>
+      {page === "home" ? (
+        <>
+          <section className="catalog-hero home-hero">
+            <div className="catalog-hero-copy">
+              <span className="eyebrow"><Sparkles size={14}/> THE VIRTUAL EYEWEAR STUDIO</span>
+              <h1>Find the frame<br/>that feels like <em>you.</em></h1>
+              <p>Explore the collection, then see how your favorite frames look on you. A better fit starts with a try.</p>
+              <button className="home-try-button" onClick={() => { setPage("catalog"); setScrollToAbout(false); window.scrollTo({ top: 0, behavior: "smooth" }); }}>Try on <ArrowRight size={17}/></button>
+            </div>
+            <div className="catalog-hero-visual"><img className="catalog-hero-person" src="/images/catalog-hero-portrait.jpg" alt="Person wearing eyeglasses in the Frame Studio collection"/></div>
+          </section>
 
-      <section className="catalog-section" id="collection">
-        <div className="catalog-section-heading"><div><span className="eyebrow">CURATED FOR YOU</span><h2>The frame collection</h2><p>Seven signature frames. Find the one that fits your look.</p></div><span className="catalog-count">01 — 07 <ChevronDown size={14}/></span></div>
-        <div className="product-grid">
-          {catalog.map((item, index) => (
-            <article className="product-card" key={item.model_url || item.name}>
-              <div className={"product-image product-image-" + item.name.toLowerCase()}>
-                <span className="product-index">0{index + 1}</span>
-                <ProductModelPreview item={item}/>
-              </div>
-              <div className="product-card-info product-card-info-centered">
-                <span className="product-category">FRAME STUDIO</span>
-                <h3>{item.name}</h3>
-                <p>{item.subtitle}</p>
-                <strong className="product-price">{item.price ? (typeof item.price === "number" ? new Intl.NumberFormat("id-ID", { style: "currency", currency: "IDR", maximumFractionDigits: 0 }).format(item.price) : item.price) : "Harga belum tersedia"}</strong>
-              </div>
-              <div className="product-card-bottom product-card-bottom-centered">
-                <span className="product-color-count">{item.colors?.length || 0} colors</span>
-                <button className="tryon-button" onClick={() => requestTryOn(item)}>Try on <ArrowRight size={15}/></button>
-              </div>
-            </article>
-          ))}
+          <section className="home-intro" id="how-it-works">
+            <span className="eyebrow">A FITTING ROOM, ANYWHERE</span>
+            <h2>Find your fit before you decide.</h2>
+            <p>Browse the collection, choose a frame, and see how it looks on you with our real-time virtual try-on experience.</p>
+            <button className="home-secondary-button" onClick={() => setPage("catalog")}>Explore the catalog <ArrowRight size={16}/></button>
+          </section>
+
+          <section className="about-section" id="about">
+            <div className="about-copy">
+              <span className="eyebrow">ABOUT FRAME STUDIO</span>
+              <h2>Eyewear should feel like you.</h2>
+              <p>Frame Studio brings a curated collection of eyewear and an interactive fitting room into one simple experience. Choose a style, explore its colors, and preview the frame using your camera.</p>
+            </div>
+            <div className="about-points">
+              <div><Glasses size={21}/><span><strong>Seven signature frames</strong><small>A focused collection with four color options for every model.</small></span></div>
+              <div><Sparkles size={21}/><span><strong>Virtual try-on</strong><small>Preview your selected 3D frame in real time.</small></span></div>
+              <div><ShieldCheck size={21}/><span><strong>Privacy-conscious camera</strong><small>Camera access starts only after your consent.</small></span></div>
+            </div>
+          </section>
+        </>
+      ) : (
+        <section className="catalog-section catalog-only" id="collection">
+          <div className="catalog-section-heading"><div><span className="eyebrow">THE FRAME COLLECTION</span><h2>Find your signature frame.</h2><p>Seven signature frames. Four colors each. Try them on in real time.</p></div><span className="catalog-count">01 — 07 <ChevronDown size={14}/></span></div>
+          <div className="product-grid">
+            {catalog.map((item, index) => (
+              <article className="product-card" key={item.model_url || item.name}>
+                <div className={"product-image product-image-" + item.name.toLowerCase()}>
+                  <span className="product-index">0{index + 1}</span>
+                  <ProductModelPreview item={item}/>
+                </div>
+                <div className="product-card-info product-card-info-centered">
+                  <span className="product-category">FRAME STUDIO</span>
+                  <h3>{item.name}</h3>
+                  <p>{item.subtitle}</p>
+                  <strong className="product-price">{item.price ? new Intl.NumberFormat("id-ID", { style: "currency", currency: "IDR", maximumFractionDigits: 0 }).format(item.price) : "Harga belum tersedia"}</strong>
+                </div>
+                <div className="product-card-bottom product-card-bottom-centered">
+                  <span className="product-color-count">{item.colors?.length || 0} colors</span>
+                  <button className="tryon-button" onClick={() => requestTryOn(item)}>Try on <ArrowRight size={15}/></button>
+                </div>
+              </article>
+            ))}
+          </div>
+        </section>
+      )}
+
+      <footer className="catalog-footer">
+        <button className="catalog-brand footer-home-link" onClick={() => { setPage("home"); setScrollToAbout(false); }}><span className="catalog-brand-icon"><Glasses size={20}/></span><span>frame<span>studio</span></span></button>
+        <span>VIRTUAL GLASSES TRY-ON · MVP</span>
+        <span><ShieldCheck size={14}/> Camera processing stays in your browser</span>
+      </footer>
+
+      {showLogin && (
+        <div className="login-backdrop" onMouseDown={(event) => event.target === event.currentTarget && setShowLogin(false)}>
+          <section className="login-dialog" role="dialog" aria-modal="true" aria-labelledby="login-title">
+            <button className="login-close" onClick={() => setShowLogin(false)} aria-label="Close login"><X size={19}/></button>
+            <span className="catalog-brand-icon login-icon"><UserRound size={22}/></span>
+            <span className="eyebrow">YOUR FRAME STUDIO ACCOUNT</span>
+            <h2 id="login-title">Welcome back.</h2>
+            <p>Sign-in will be available when account authentication is connected.</p>
+            <label>Email address<input type="email" placeholder="you@example.com" disabled/></label>
+            <label>Password<input type="password" placeholder="Enter your password" disabled/></label>
+            <button className="login-submit" disabled>Login · Coming soon</button>
+            <small>This is a visual login placeholder. No account data is collected.</small>
+          </section>
         </div>
-      </section>
+      )}
 
-      <section className="how-section" id="how-it-works"><div className="how-icon"><Sparkles size={22}/></div><div><span className="eyebrow">A FITTING ROOM, ANYWHERE</span><h2>See it before you choose it.</h2><p>Select a frame, open the virtual fitting room, and let the camera place the 3D glasses on your face in real time.</p></div><div className="how-steps"><span><b>01</b> Choose a frame</span><span><b>02</b> Open Try-on</span><span><b>03</b> Find your fit</span></div></section>
-
-      <footer className="catalog-footer" id="about"><a className="catalog-brand" href="#"><span className="catalog-brand-icon"><Glasses size={20}/></span><span>frame<span>studio</span></span></a><span>VIRTUAL GLASSES TRY-ON · MVP</span><span><ShieldCheck size={14}/> Camera processing stays in your browser</span></footer>
       {consentProduct && <CameraConsent onAgree={acceptCameraConsent} onDisagree={() => setConsentProduct(null)}/>}
       {activeProduct && <TryOnModal product={activeProduct} onSelect={setActiveProduct} onClose={() => setActiveProduct(null)}/>}
     </main>
