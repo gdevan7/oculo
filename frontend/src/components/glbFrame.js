@@ -2,9 +2,9 @@ import * as THREE from "three";
 import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
 
 const PRESETS = {
-  "model_0_white.glb": { widthMm: 160, rotation: new THREE.Matrix4().set(0,1,0,0, 0,0,1,0, 1,0,0,0, 0,0,0,1) },
-  "model_1_tortoiseshell.glb": { widthMm: 160, rotation: new THREE.Matrix4() },
-  "model_2_black.glb": { widthMm: 160, rotation: new THREE.Matrix4().makeRotationY(-Math.PI / 2) }
+  "model_0_white.glb": { widthMm: 150, rotation: new THREE.Matrix4().set(0,1,0,0, 0,0,1,0, 1,0,0,0, 0,0,0,1) },
+  "model_1_tortoiseshell.glb": { widthMm: 150, rotation: new THREE.Matrix4() },
+  "model_2_black.glb": { widthMm: 150, rotation: new THREE.Matrix4().makeRotationY(-Math.PI / 2) }
 };
 const loader = new GLTFLoader();
 const cache = new Map();
@@ -49,7 +49,7 @@ export async function loadGlbFrame(url) {
   const preset = folder === "model-0" ? PRESETS["model_0_white.glb"]
     : folder === "model-1" ? PRESETS["model_1_tortoiseshell.glb"]
     : folder === "model-2" ? PRESETS["model_2_black.glb"]
-    : ["model-3", "model-4", "model-5", "model-6"].includes(folder) ? { widthMm: 160, rotation: new THREE.Matrix4() }
+    : ["model-3", "model-4", "model-5", "model-6"].includes(folder) ? { widthMm: 150, rotation: new THREE.Matrix4() }
     : PRESETS[filename];
   if (!preset) throw new Error(`No orientation preset configured for GLB: ${filename}`);
 

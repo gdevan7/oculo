@@ -78,6 +78,7 @@ export default function ProductModelPreview({ item }) {
       : folder === "model-2" ? PRESETS["model_2_black.glb"]
       : ["model-3", "model-4", "model-5", "model-6"].includes(folder) ? new THREE.Matrix4()
       : PRESETS[filename];
+    const targetWidthMm = folder === "model-6" ? 175 : 150;
     if (!rotation) {
       setFailed(true);
       return () => {
@@ -125,7 +126,7 @@ export default function ProductModelPreview({ item }) {
         const normalized = new THREE.Group();
         model.position.set(-center.x, -center.y, -bounds.max.z);
         normalized.add(model);
-        normalized.scale.setScalar(160 / size.x);
+        normalized.scale.setScalar(targetWidthMm / size.x);
         normalized.rotation.y = -0.1;
         normalized.rotation.x = 0.035;
         scene.add(normalized);
