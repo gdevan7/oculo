@@ -127,8 +127,7 @@ export default function ProductModelPreview({ item }) {
         model.position.set(-center.x, -center.y, -bounds.max.z);
         normalized.add(model);
         normalized.scale.setScalar(targetWidthMm / size.x);
-        normalized.rotation.y = -0.1;
-        normalized.rotation.x = 0.035;
+        normalized.rotation.set(0, 0, 0);
         scene.add(normalized);
         resize();
       },

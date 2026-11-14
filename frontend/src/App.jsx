@@ -9,7 +9,7 @@ const fallback = [
     id: "black", name: "Cloud", subtitle: "Everyday Essential",
     description: "A clean, lightweight frame for an effortless everyday look.",
     frame_color: "#17191D", style: "classic", color_id: "black",
-    model_url: "/models/model-0/model_0_black.glb", price: "Try-on ready",
+    model_url: "/models/model-0/model_0_black.glb", price: null,
     colors: [
       { id: "black", name: "Classic Black", hex: "#17191D", model_url: "/models/model-0/model_0_black.glb" },
       { id: "dusty-rose", name: "Dusty Rose", hex: "#B98286", model_url: "/models/model-0/model_0_dusty_rose.glb" },
@@ -21,7 +21,7 @@ const fallback = [
     id: "tortoiseshell", name: "Frankie", subtitle: "Modern Tortoise",
     description: "Warm tortoiseshell details with a timeless silhouette.",
     frame_color: "#70452F", style: "tortoise", color_id: "tortoiseshell",
-    model_url: "/models/model-1/model_1_tortoiseshell.glb", price: "Try-on ready",
+    model_url: "/models/model-1/model_1_tortoiseshell.glb", price: null,
     colors: [
       { id: "tortoiseshell", name: "Tortoiseshell", hex: "#70452F", model_url: "/models/model-1/model_1_tortoiseshell.glb" },
       { id: "honey-amber", name: "Honey Amber", hex: "#C28A43", model_url: "/models/model-1/model_1_honey_amber.glb" },
@@ -33,7 +33,7 @@ const fallback = [
     id: "black", name: "Monroe", subtitle: "Classic Black",
     description: "A confident black frame that goes with just about everything.",
     frame_color: "#171717", style: "black", color_id: "black",
-    model_url: "/models/model-2/model_2_black.glb", price: "Try-on ready",
+    model_url: "/models/model-2/model_2_black.glb", price: null,
     colors: [
       { id: "black", name: "Matte Black", hex: "#17191D", model_url: "/models/model-2/model_2_black.glb" },
       { id: "gold", name: "Gold", hex: "#C6A15B", model_url: "/models/model-2/model_2_gold.glb" },
@@ -45,7 +45,7 @@ const fallback = [
     id: "model-3", name: "Noir", subtitle: "Contemporary Acetate",
     description: "A versatile silhouette with four distinctive finishes.",
     frame_color: "#17191D", style: "classic", color_id: "black-lens",
-    model_url: "/models/model-3/model_3_black_lens.glb", price: "Try-on ready",
+    model_url: "/models/model-3/model_3_black_lens.glb", price: null,
     colors: [
       { id: "black-lens", name: "Black Lens", hex: "#24272B", model_url: "/models/model-3/model_3_black_lens.glb" },
       { id: "burgundy-wine", name: "Burgundy Wine", hex: "#713747", model_url: "/models/model-3/model_3_burgundy_wine.glb" },
@@ -57,7 +57,7 @@ const fallback = [
     id: "model-4", name: "Browline", subtitle: "Refined Browline",
     description: "A defined browline profile with contrasting metal details.",
     frame_color: "#59402F", style: "tortoise", color_id: "browline-merged",
-    model_url: "/models/model-4/model_4_browline_merged.glb", price: "Try-on ready",
+    model_url: "/models/model-4/model_4_browline_merged.glb", price: null,
     colors: [
       { id: "browline-merged", name: "Classic Browline", hex: "#4D4037", model_url: "/models/model-4/model_4_browline_merged.glb" },
       { id: "brown-gold", name: "Brown Gold", hex: "#87603C", model_url: "/models/model-4/model_4_brown_gold.glb" },
@@ -69,7 +69,7 @@ const fallback = [
     id: "model-5", name: "Heritage", subtitle: "Modern Browline",
     description: "A second browline design with a distinct frame construction.",
     frame_color: "#5B4638", style: "tortoise", color_id: "browline",
-    model_url: "/models/model-5/model_5_browline.glb", price: "Try-on ready",
+    model_url: "/models/model-5/model_5_browline.glb", price: null,
     colors: [
       { id: "browline", name: "Browline", hex: "#4B3B30", model_url: "/models/model-5/model_5_browline.glb" },
       { id: "brown-gold", name: "Brown Gold", hex: "#87603C", model_url: "/models/model-5/model_5_brown_gold.glb" },
@@ -81,7 +81,7 @@ const fallback = [
     id: "model-6", name: "Evergreen", subtitle: "Everyday Metal",
     description: "A clean everyday frame in understated natural tones.",
     frame_color: "#202326", style: "classic", color_id: "black",
-    model_url: "/models/model-6/model_6_black.glb", price: "Try-on ready",
+    model_url: "/models/model-6/model_6_black.glb", price: null,
     colors: [
       { id: "black", name: "Black", hex: "#202326", model_url: "/models/model-6/model_6_black.glb" },
       { id: "forest-green", name: "Forest Green", hex: "#435B4A", model_url: "/models/model-6/model_6_forest_green.glb" },
@@ -221,7 +221,7 @@ export default function App() {
     let live = true;
     getGlasses().then((data) => {
       if (!live || !Array.isArray(data)) return;
-      setCatalog(fallback.map((item) => ({ ...item, ...(data.find((row) => row.id === item.id) || {}), model_url: item.model_url, price: item.price, subtitle: item.subtitle })));
+      setCatalog(fallback.map((item) => { const row = data.find((entry) => entry.name === item.name || entry.id === item.id); return { ...item, ...(row || {}), model_url: item.model_url, price: row?.price ?? item.price, subtitle: item.subtitle, colors: item.colors }; }));
     }).catch(() => {});
     return () => { live = false; };
   }, []);
@@ -243,10 +243,21 @@ export default function App() {
         <div className="catalog-section-heading"><div><span className="eyebrow">CURATED FOR YOU</span><h2>The frame collection</h2><p>Seven signature frames. Find the one that fits your look.</p></div><span className="catalog-count">01 — 07 <ChevronDown size={14}/></span></div>
         <div className="product-grid">
           {catalog.map((item, index) => (
-            <article className="product-card" key={item.id}>
-              <div className={"product-image product-image-" + item.id}><span className="product-index">0{index + 1}</span><button className="product-favorite" aria-label={"Save " + item.name}><Heart size={19}/></button><ProductModelPreview item={item}/><span className="product-image-caption">FRAME STUDIO · {item.subtitle.toUpperCase()}</span></div>
-              <div className="product-card-info"><div><span className="product-category">SUNGLASSES</span><h3>{item.name}</h3><p>{item.description}</p></div><strong className="product-price">{item.price}</strong></div>
-              <div className="product-card-bottom"><div className="product-swatches" aria-label={(item.colors?.length || 0) + " available colors"}>{(item.colors || []).map((color) => <span key={color.id} className="style-swatch" title={color.name} style={{ backgroundColor: color.hex }}/>)}</div><button className="tryon-button" onClick={() => requestTryOn(item)}>Try on <ArrowRight size={15}/></button></div>
+            <article className="product-card" key={item.model_url || item.name}>
+              <div className={"product-image product-image-" + item.name.toLowerCase()}>
+                <span className="product-index">0{index + 1}</span>
+                <ProductModelPreview item={item}/>
+              </div>
+              <div className="product-card-info product-card-info-centered">
+                <span className="product-category">FRAME STUDIO</span>
+                <h3>{item.name}</h3>
+                <p>{item.subtitle}</p>
+                <strong className="product-price">{item.price ? (typeof item.price === "number" ? new Intl.NumberFormat("id-ID", { style: "currency", currency: "IDR", maximumFractionDigits: 0 }).format(item.price) : item.price) : "Harga belum tersedia"}</strong>
+              </div>
+              <div className="product-card-bottom product-card-bottom-centered">
+                <span className="product-color-count">{item.colors?.length || 0} colors</span>
+                <button className="tryon-button" onClick={() => requestTryOn(item)}>Try on <ArrowRight size={15}/></button>
+              </div>
             </article>
           ))}
         </div>
