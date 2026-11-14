@@ -188,3 +188,8 @@
 
 .catalog-hero-visual{background:#f1eee8;display:block}
 .catalog-hero-person{display:block;width:100%;height:100%;object-fit:cover;object-position:center 48%}
+
+/* Ensure the catalog hero portrait fills its visual panel in production builds */
+.catalog-hero-visual{position:relative;display:block!important;height:285px;min-height:285px;overflow:hidden;background:#f1eee8}
+.catalog-hero-visual .catalog-hero-person{position:absolute!important;inset:0!important;display:block!important;width:100%!important;height:100%!important;min-width:100%;min-height:100%;max-width:none;object-fit:cover;object-position:center 43%;opacity:1;visibility:visible;z-index:2}
+@media(max-width:760px){.catalog-hero-visual{height:220px;min-height:220px}}
