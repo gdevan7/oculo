@@ -236,7 +236,7 @@ export default function App() {
 
       <section className="catalog-hero">
         <div className="catalog-hero-copy"><span className="eyebrow"><Sparkles size={14}/> THE VIRTUAL EYEWEAR STUDIO</span><h1>Find the frame<br/>that feels like <em>you.</em></h1><p>Explore the collection, then see how your favorite frames look on you. A better fit starts with a try.</p><a className="hero-link" href="#collection">Explore the collection <ArrowRight size={16}/></a></div>
-        <div className="catalog-hero-visual"><img className="catalog-hero-person" src="/images/catalog-hero-person.webp" alt="Person wearing eyeglasses in the Frame Studio collection"/></div>
+        <div className="catalog-hero-visual"><img className="catalog-hero-person" src="/images/catalog-hero-portrait.jpg" alt="Person wearing eyeglasses in the Frame Studio collection"/></div>
       </section>
 
       <section className="catalog-section" id="collection">
