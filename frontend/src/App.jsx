@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { ArrowRight, Check, ChevronDown, Glasses, Heart, HelpCircle, ShieldCheck, Sparkles, X } from "lucide-react";
+import { ArrowRight, Check, CheckCircle2, ChevronDown, Glasses, Heart, HelpCircle, ShieldCheck, Sparkles, X } from "lucide-react";
 import CameraStage from "./components/CameraStage.jsx";
 import ProductModelPreview from "./components/ProductModelPreview.jsx";
 import { getGlasses } from "./services/api.js";
@@ -91,6 +91,57 @@ const fallback = [
   }
 ];
 
+const CAMERA_CONSENT_KEY = "frame-studio-camera-consent-v1";
+
+function CameraConsent({ onAgree, onDisagree }) {
+  useEffect(() => {
+    const onKeyDown = (event) => event.key === "Escape" && onDisagree();
+    document.addEventListener("keydown", onKeyDown);
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.removeEventListener("keydown", onKeyDown);
+      document.body.style.overflow = "";
+    };
+  }, [onDisagree]);
+
+  return (
+    <div className="consent-backdrop">
+      <section className="consent-dialog" role="dialog" aria-modal="true" aria-labelledby="consent-title">
+        <button className="consent-close" onClick={onDisagree} aria-label="Close consent"><X size={19}/></button>
+        <div className="consent-visual">
+          <div className="consent-illustration">
+            <div className="consent-phone">
+              <span className="consent-camera-dot"/>
+              <Glasses size={57} strokeWidth={1.25}/>
+              <span className="consent-face-line"/>
+            </div>
+            <div className="consent-frame-stack"><Glasses size={38}/><Glasses size={38}/><Glasses size={38}/></div>
+          </div>
+          <p>Before entering your virtual fitting room, please review how the camera is used.</p>
+          <span className="consent-brand">FRAME STUDIO · VIRTUAL TRY-ON</span>
+        </div>
+        <div className="consent-copy">
+          <div>
+            <span className="eyebrow">CAMERA & PRIVACY</span>
+            <h2 id="consent-title">Your camera, your choice.</h2>
+            <p className="consent-intro">We use your camera to position the selected 3D glasses on your face in real time.</p>
+            <div className="consent-points">
+              <div><CheckCircle2/><span><strong>Face tracking only</strong><small>Face landmarks are processed in your browser to align the virtual frame. The app does not identify who you are.</small></span></div>
+              <div><CheckCircle2/><span><strong>No camera-frame upload in the try-on flow</strong><small>The live camera stream is used on this device and is not uploaded or stored by this app.</small></span></div>
+              <div><ShieldCheck/><span><strong>Permission is requested separately</strong><small>After you agree, press “Start camera”. Your browser will then ask for camera access, which you can deny at any time.</small></span></div>
+            </div>
+            <p className="consent-note">Your choice is remembered on this browser. You can revoke camera access later in your browser settings. Agreeing here does not itself turn on the camera.</p>
+          </div>
+          <div className="consent-actions">
+            <button className="consent-disagree" onClick={onDisagree}>I disagree</button>
+            <button className="consent-agree" onClick={onAgree}>I agree <ArrowRight size={17}/></button>
+          </div>
+        </div>
+      </section>
+    </div>
+  );
+}
+
 function TryOnModal({ product, onClose, onSelect }) {
   useEffect(() => {
     const onKeyDown = (event) => event.key === "Escape" && onClose();
@@ -151,7 +202,7 @@ function TryOnModal({ product, onClose, onSelect }) {
 
 export default function App() {
   const [catalog, setCatalog] = useState(fallback);
-  const [activeProduct, setActiveProduct] = useState(null);
+  const [activeProduct, setActiveProduct] = useState(null);\n  const [consentProduct, setConsentProduct] = useState(null);\n\n  const requestTryOn = (item) => {\n    const accepted = window.localStorage.getItem(CAMERA_CONSENT_KEY) === "accepted";\n    if (accepted) setActiveProduct(item);\n    else setConsentProduct(item);\n  };\n\n  const acceptCameraConsent = () => {\n    window.localStorage.setItem(CAMERA_CONSENT_KEY, "accepted");\n    setActiveProduct(consentProduct);\n    setConsentProduct(null);\n  };
 
   useEffect(() => {
     let live = true;
@@ -182,7 +233,7 @@ export default function App() {
             <article className="product-card" key={item.id}>
               <div className={"product-image product-image-" + item.id}><span className="product-index">0{index + 1}</span><button className="product-favorite" aria-label={"Save " + item.name}><Heart size={19}/></button><ProductModelPreview item={item}/><span className="product-image-caption">FRAME STUDIO · {item.subtitle.toUpperCase()}</span></div>
               <div className="product-card-info"><div><span className="product-category">SUNGLASSES</span><h3>{item.name}</h3><p>{item.description}</p></div><strong className="product-price">{item.price}</strong></div>
-              <div className="product-card-bottom"><div className="product-swatches" aria-label={(item.colors?.length || 0) + " available colors"}>{(item.colors || []).map((color) => <span key={color.id} className="style-swatch" title={color.name} style={{ backgroundColor: color.hex }}/>)}</div><button className="tryon-button" onClick={() => setActiveProduct(item)}>Try on <ArrowRight size={15}/></button></div>
+              <div className="product-card-bottom"><div className="product-swatches" aria-label={(item.colors?.length || 0) + " available colors"}>{(item.colors || []).map((color) => <span key={color.id} className="style-swatch" title={color.name} style={{ backgroundColor: color.hex }}/>)}</div><button className="tryon-button" onClick={() => requestTryOn(item)}>Try on <ArrowRight size={15}/></button></div>
             </article>
           ))}
         </div>
@@ -191,7 +242,7 @@ export default function App() {
       <section className="how-section" id="how-it-works"><div className="how-icon"><Sparkles size={22}/></div><div><span className="eyebrow">A FITTING ROOM, ANYWHERE</span><h2>See it before you choose it.</h2><p>Select a frame, open the virtual fitting room, and let the camera place the 3D glasses on your face in real time.</p></div><div className="how-steps"><span><b>01</b> Choose a frame</span><span><b>02</b> Open Try-on</span><span><b>03</b> Find your fit</span></div></section>
 
       <footer className="catalog-footer" id="about"><a className="catalog-brand" href="#"><span className="catalog-brand-icon"><Glasses size={20}/></span><span>frame<span>studio</span></span></a><span>VIRTUAL GLASSES TRY-ON · MVP</span><span><ShieldCheck size={14}/> Camera processing stays in your browser</span></footer>
-      {activeProduct && <TryOnModal product={activeProduct} onSelect={setActiveProduct} onClose={() => setActiveProduct(null)}/>}
+      {consentProduct && <CameraConsent onAgree={acceptCameraConsent} onDisagree={() => setConsentProduct(null)}/>}\n      {activeProduct && <TryOnModal product={activeProduct} onSelect={setActiveProduct} onClose={() => setActiveProduct(null)}/>}
     </main>
   );
 }
