@@ -52,6 +52,8 @@ export default function CameraStage({ glasses }) {
           track.current = {
             lm: r.faceLandmarks[0],
             matrix: r.facialTransformationMatrixes?.[0]?.data ?? null,
+            videoWidth: v.videoWidth,
+            videoHeight: v.videoHeight,
           };
           if (!hasFace.current) {
             hasFace.current = true;

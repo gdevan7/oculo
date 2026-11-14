@@ -68,10 +68,25 @@ export default function GlassesScene({ glasses, trackRef, enabled }) {
         const w = el.clientWidth, h = el.clientHeight, L = t.lm[33], R = t.lm[263];
         m.fromArray(t.matrix).decompose(p, tq, sc);
         eul.setFromQuaternion(tq, "YXZ");
-        const eyePx = Math.hypot((R.x - L.x) * w, (R.y - L.y) * h);
+
+        // Match MediaPipe source coordinates to the exact object-fit: cover crop
+        // used by the camera video. Without this, a portrait-ish modal stage crops
+        // the video while the AR overlay still assumes the full uncropped frame.
+        const sourceW = t.videoWidth || w;
+        const sourceH = t.videoHeight || h;
+        const coverScale = Math.max(w / sourceW, h / sourceH);
+        const renderedW = sourceW * coverScale;
+        const renderedH = sourceH * coverScale;
+        const cropX = (renderedW - w) / 2;
+        const cropY = (renderedH - h) / 2;
+        const lx = L.x * renderedW - cropX;
+        const ly = L.y * renderedH - cropY;
+        const rx = R.x * renderedW - cropX;
+        const ry = R.y * renderedH - cropY;
+        const eyePx = Math.hypot(rx - lx, ry - ly);
         const s = eyePx / (EYE_MM * Math.max(Math.cos(eul.y), 0.6));
-        const x = ((L.x + R.x) / 2) * w - w / 2;
-        const y = h / 2 - ((L.y + R.y) / 2) * h;
+        const x = (lx + rx) / 2 - w / 2;
+        const y = h / 2 - (ly + ry) / 2;
         const a = first ? 1 : 0.6;
         pivot.position.x = THREE.MathUtils.lerp(pivot.position.x, x, a);
         pivot.position.y = THREE.MathUtils.lerp(pivot.position.y, y, a);
