@@ -21,6 +21,7 @@ export default function ProductModelPreview({ item }) {
     const host = hostRef.current;
     if (!host || !item?.model_url) return undefined;
 
+    setFailed(false);
     let disposed = false;
     let model = null;
     let renderer = null;
@@ -69,8 +70,13 @@ export default function ProductModelPreview({ item }) {
     observer.observe(host);
     resize();
 
-    const filename = item.model_url.split("?")[0].split("/").pop();
-    const rotation = PRESETS[filename];
+    const modelPath = item.model_url.split("?")[0];
+    const filename = modelPath.split("/").pop();
+    const folder = modelPath.split("/").slice(-2, -1)[0];
+    const rotation = folder === "model-0" ? PRESETS["model_0_white.glb"]
+      : folder === "model-1" ? PRESETS["model_1_tortoiseshell.glb"]
+      : folder === "model-2" ? PRESETS["model_2_black.glb"]
+      : PRESETS[filename];
     if (!rotation) {
       setFailed(true);
       return () => {

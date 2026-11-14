@@ -5,9 +5,42 @@ import ProductModelPreview from "./components/ProductModelPreview.jsx";
 import { getGlasses } from "./services/api.js";
 
 const fallback = [
-  { id: "white", name: "Cloud", subtitle: "Everyday Essential", description: "A clean, lightweight frame for an effortless everyday look.", frame_color: "#F2F0E9", style: "classic", model_url: "/models/model_0_white.glb", price: "Try-on ready" },
-  { id: "tortoiseshell", name: "Frankie", subtitle: "Modern Tortoise", description: "Warm tortoiseshell details with a timeless silhouette.", frame_color: "#70452F", style: "tortoise", model_url: "/models/model_1_tortoiseshell.glb", price: "Try-on ready" },
-  { id: "black", name: "Monroe", subtitle: "Classic Black", description: "A confident black frame that goes with just about everything.", frame_color: "#171717", style: "black", model_url: "/models/model_2_black.glb", price: "Try-on ready" }
+  {
+    id: "white", name: "Cloud", subtitle: "Everyday Essential",
+    description: "A clean, lightweight frame for an effortless everyday look.",
+    frame_color: "#F2F0E9", style: "classic", color_id: "white",
+    model_url: "/models/model-0/model_0_white.glb", price: "Try-on ready",
+    colors: [
+      { id: "white", name: "White", hex: "#E8E3D9", model_url: "/models/model-0/model_0_white.glb" },
+      { id: "dusty-rose", name: "Dusty Rose", hex: "#B98286", model_url: "/models/model-0/model_0_dusty_rose.glb" },
+      { id: "sage-green", name: "Sage Green", hex: "#899B83", model_url: "/models/model-0/model_0_sage_green.glb" },
+      { id: "slate-blue-grey", name: "Slate Blue Grey", hex: "#71818C", model_url: "/models/model-0/model_0_slate_blue_grey.glb" }
+    ]
+  },
+  {
+    id: "tortoiseshell", name: "Frankie", subtitle: "Modern Tortoise",
+    description: "Warm tortoiseshell details with a timeless silhouette.",
+    frame_color: "#70452F", style: "tortoise", color_id: "tortoiseshell",
+    model_url: "/models/model-1/model_1_tortoiseshell.glb", price: "Try-on ready",
+    colors: [
+      { id: "tortoiseshell", name: "Tortoiseshell", hex: "#70452F", model_url: "/models/model-1/model_1_tortoiseshell.glb" },
+      { id: "honey-amber", name: "Honey Amber", hex: "#C28A43", model_url: "/models/model-1/model_1_honey_amber.glb" },
+      { id: "taupe-grey", name: "Taupe Grey", hex: "#8D8279", model_url: "/models/model-1/model_1_taupe_grey.glb" },
+      { id: "burgundy-wine", name: "Burgundy Wine", hex: "#632D42", model_url: "/models/model-1/model_1_burgundy_wine.glb" }
+    ]
+  },
+  {
+    id: "black", name: "Monroe", subtitle: "Classic Black",
+    description: "A confident black frame that goes with just about everything.",
+    frame_color: "#171717", style: "black", color_id: "black",
+    model_url: "/models/model-2/model_2_black.glb", price: "Try-on ready",
+    colors: [
+      { id: "black", name: "Matte Black", hex: "#17191D", model_url: "/models/model-2/model_2_black.glb" },
+      { id: "gold", name: "Gold", hex: "#C6A15B", model_url: "/models/model-2/model_2_gold.glb" },
+      { id: "rose-gold", name: "Rose Gold", hex: "#B98278", model_url: "/models/model-2/model_2_rose_gold.glb" },
+      { id: "silver", name: "Silver", hex: "#AEB5BC", model_url: "/models/model-2/model_2_silver.glb" }
+    ]
+  }
 ];
 
 function TryOnModal({ product, catalog, onClose, onSelect }) {
@@ -38,6 +71,24 @@ function TryOnModal({ product, catalog, onClose, onSelect }) {
               {catalog.map((item) => (
                 <button key={item.id} className={"modal-style-chip " + (item.id === product.id ? "active" : "")} onClick={() => onSelect(item)} aria-label={"Try " + item.name} aria-pressed={item.id === product.id}>
                   <span className={"style-swatch swatch-" + item.id}/>{item.name}{item.id === product.id && <Check size={14}/>}
+                </button>
+              ))}
+            </div>
+          </div>
+          <div className="custom-option">
+            <div className="custom-option-title"><strong>Frame color</strong><span>{product.colors?.length || 0} colors</span></div>
+            <div className="modal-style-list">
+              {(product.colors || []).map((color) => (
+                <button
+                  key={color.id}
+                  className={"modal-style-chip " + ((product.color_id || product.colors?.[0]?.id) === color.id ? "active" : "")}
+                  onClick={() => onSelect({ ...product, model_url: color.model_url, color_id: color.id, color_name: color.name, frame_color: color.hex })}
+                  aria-label={"Choose " + color.name}
+                  aria-pressed={(product.color_id || product.colors?.[0]?.id) === color.id}
+                >
+                  <span className="style-swatch" style={{ backgroundColor: color.hex }} />
+                  {color.name}
+                  {(product.color_id || product.colors?.[0]?.id) === color.id && <Check size={14}/>}
                 </button>
               ))}
             </div>
@@ -93,7 +144,7 @@ export default function App() {
             <article className="product-card" key={item.id}>
               <div className={"product-image product-image-" + item.id}><span className="product-index">0{index + 1}</span><button className="product-favorite" aria-label={"Save " + item.name}><Heart size={19}/></button><ProductModelPreview item={item}/><span className="product-image-caption">FRAME STUDIO · {item.subtitle.toUpperCase()}</span></div>
               <div className="product-card-info"><div><span className="product-category">SUNGLASSES</span><h3>{item.name}</h3><p>{item.description}</p></div><strong className="product-price">{item.price}</strong></div>
-              <div className="product-card-bottom"><div className="product-swatches"><span className={"style-swatch swatch-" + item.id}/><span className="swatch-muted"/><span className="swatch-muted light"/></div><button className="tryon-button" onClick={() => setActiveProduct(item)}>Try on <ArrowRight size={15}/></button></div>
+              <div className="product-card-bottom"><div className="product-swatches" aria-label={(item.colors?.length || 0) + " available colors"}>{(item.colors || []).map((color) => <span key={color.id} className="style-swatch" title={color.name} style={{ backgroundColor: color.hex }}/>)}</div><button className="tryon-button" onClick={() => setActiveProduct(item)}>Try on <ArrowRight size={15}/></button></div>
             </article>
           ))}
         </div>
