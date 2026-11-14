@@ -245,7 +245,6 @@ export default function App() {
         </button>
         <nav className="catalog-nav" aria-label="Main navigation">
           <button className={page === "catalog" ? "nav-active" : ""} onClick={() => { setScrollToAbout(false); setPage("catalog"); window.scrollTo({ top: 0, behavior: "smooth" }); }}>Catalog</button>
-          <button className={page === "home" ? "nav-active" : ""} onClick={() => { setScrollToAbout(false); setPage("home"); window.scrollTo({ top: 0, behavior: "smooth" }); }}>Home</button>
           <button onClick={() => { if (page === "home") document.getElementById("about")?.scrollIntoView({ behavior: "smooth" }); else { setScrollToAbout(true); setPage("home"); } }}>About</button>
         </nav>
         <button className="header-profile" onClick={() => setShowLogin(true)} aria-label="Open login"><UserRound size={19}/></button>
