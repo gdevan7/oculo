@@ -6,12 +6,12 @@ import { getGlasses } from "./services/api.js";
 
 const fallback = [
   {
-    id: "white", name: "Cloud", subtitle: "Everyday Essential",
+    id: "black", name: "Cloud", subtitle: "Everyday Essential",
     description: "A clean, lightweight frame for an effortless everyday look.",
-    frame_color: "#F2F0E9", style: "classic", color_id: "white",
-    model_url: "/models/model-0/model_0_white.glb", price: "Try-on ready",
+    frame_color: "#17191D", style: "classic", color_id: "black",
+    model_url: "/models/model-0/model_0_black.glb", price: "Try-on ready",
     colors: [
-      { id: "white", name: "White", hex: "#E8E3D9", model_url: "/models/model-0/model_0_white.glb" },
+      { id: "black", name: "Classic Black", hex: "#17191D", model_url: "/models/model-0/model_0_black.glb" },
       { id: "dusty-rose", name: "Dusty Rose", hex: "#B98286", model_url: "/models/model-0/model_0_dusty_rose.glb" },
       { id: "sage-green", name: "Sage Green", hex: "#899B83", model_url: "/models/model-0/model_0_sage_green.glb" },
       { id: "slate-blue-grey", name: "Slate Blue Grey", hex: "#71818C", model_url: "/models/model-0/model_0_slate_blue_grey.glb" }

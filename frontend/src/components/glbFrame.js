@@ -2,7 +2,7 @@ import * as THREE from "three";
 import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
 
 const PRESETS = {
-  "model_0_white.glb": { widthMm: 150, rotation: new THREE.Matrix4().set(0,1,0,0, 0,0,1,0, 1,0,0,0, 0,0,0,1) },
+  "model_0_black.glb": { widthMm: 150, rotation: new THREE.Matrix4().set(0,1,0,0, 0,0,1,0, 1,0,0,0, 0,0,0,1) },
   "model_1_tortoiseshell.glb": { widthMm: 150, rotation: new THREE.Matrix4() },
   "model_2_black.glb": { widthMm: 150, rotation: new THREE.Matrix4().makeRotationY(-Math.PI / 2) }
 };
@@ -46,7 +46,7 @@ export async function loadGlbFrame(url) {
   if (!isSafeModelUrl(url)) throw new Error(`Unsafe GLB model URL: ${url}`);
   const filename = url.split("?")[0].split("/").pop();
   const folder = url.split("?")[0].split("/").slice(-2, -1)[0];
-  const preset = folder === "model-0" ? PRESETS["model_0_white.glb"]
+  const preset = folder === "model-0" ? PRESETS["model_0_black.glb"]
     : folder === "model-1" ? PRESETS["model_1_tortoiseshell.glb"]
     : folder === "model-2" ? PRESETS["model_2_black.glb"]
     : ["model-3", "model-4", "model-5"].includes(folder) ? { widthMm: 150, rotation: new THREE.Matrix4() }

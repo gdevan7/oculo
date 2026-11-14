@@ -3,7 +3,7 @@ import * as THREE from "three";
 import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
 
 const PRESETS = {
-  "model_0_white.glb": new THREE.Matrix4().set(
+  "model_0_black.glb": new THREE.Matrix4().set(
     0, 1, 0, 0,
     0, 0, 1, 0,
     1, 0, 0, 0,
@@ -73,7 +73,7 @@ export default function ProductModelPreview({ item }) {
     const modelPath = item.model_url.split("?")[0];
     const filename = modelPath.split("/").pop();
     const folder = modelPath.split("/").slice(-2, -1)[0];
-    const rotation = folder === "model-0" ? PRESETS["model_0_white.glb"]
+    const rotation = folder === "model-0" ? PRESETS["model_0_black.glb"]
       : folder === "model-1" ? PRESETS["model_1_tortoiseshell.glb"]
       : folder === "model-2" ? PRESETS["model_2_black.glb"]
       : ["model-3", "model-4", "model-5", "model-6"].includes(folder) ? new THREE.Matrix4()
