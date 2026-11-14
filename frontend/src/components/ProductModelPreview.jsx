@@ -124,7 +124,7 @@ export default function ProductModelPreview({ item }) {
         const normalized = new THREE.Group();
         model.position.set(-center.x, -center.y, -bounds.max.z);
         normalized.add(model);
-        normalized.scale.setScalar(140 / size.x);
+        normalized.scale.setScalar(170 / size.x);
         normalized.rotation.y = -0.1;
         normalized.rotation.x = 0.035;
         scene.add(normalized);

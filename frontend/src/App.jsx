@@ -43,7 +43,7 @@ const fallback = [
   }
 ];
 
-function TryOnModal({ product, catalog, onClose, onSelect }) {
+function TryOnModal({ product, onClose, onSelect }) {
   useEffect(() => {
     const onKeyDown = (event) => event.key === "Escape" && onClose();
     document.addEventListener("keydown", onKeyDown);
@@ -65,16 +65,6 @@ function TryOnModal({ product, catalog, onClose, onSelect }) {
         </div>
         <aside className="modal-details">
           <div className="modal-product-heading"><span className="eyebrow">YOUR FITTING ROOM</span><h2>{product.name}</h2><p>{product.subtitle}</p></div>
-          <div className="custom-option">
-            <div className="custom-option-title"><strong>Frame style</strong><span>3 styles</span></div>
-            <div className="modal-style-list">
-              {catalog.map((item) => (
-                <button key={item.id} className={"modal-style-chip " + (item.id === product.id ? "active" : "")} onClick={() => onSelect(item)} aria-label={"Try " + item.name} aria-pressed={item.id === product.id}>
-                  <span className={"style-swatch swatch-" + item.id}/>{item.name}{item.id === product.id && <Check size={14}/>}
-                </button>
-              ))}
-            </div>
-          </div>
           <div className="custom-option">
             <div className="custom-option-title"><strong>Frame color</strong><span>{product.colors?.length || 0} colors</span></div>
             <div className="modal-style-list">
@@ -153,7 +143,7 @@ export default function App() {
       <section className="how-section" id="how-it-works"><div className="how-icon"><Sparkles size={22}/></div><div><span className="eyebrow">A FITTING ROOM, ANYWHERE</span><h2>See it before you choose it.</h2><p>Select a frame, open the virtual fitting room, and let the camera place the 3D glasses on your face in real time.</p></div><div className="how-steps"><span><b>01</b> Choose a frame</span><span><b>02</b> Open Try-on</span><span><b>03</b> Find your fit</span></div></section>
 
       <footer className="catalog-footer" id="about"><a className="catalog-brand" href="#"><span className="catalog-brand-icon"><Glasses size={20}/></span><span>frame<span>studio</span></span></a><span>VIRTUAL GLASSES TRY-ON · MVP</span><span><ShieldCheck size={14}/> Camera processing stays in your browser</span></footer>
-      {activeProduct && <TryOnModal product={activeProduct} catalog={catalog} onSelect={setActiveProduct} onClose={() => setActiveProduct(null)}/>}
+      {activeProduct && <TryOnModal product={activeProduct} onSelect={setActiveProduct} onClose={() => setActiveProduct(null)}/>}
     </main>
   );
 }
