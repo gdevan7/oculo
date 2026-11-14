@@ -49,7 +49,8 @@ export async function loadGlbFrame(url) {
   const preset = folder === "model-0" ? PRESETS["model_0_white.glb"]
     : folder === "model-1" ? PRESETS["model_1_tortoiseshell.glb"]
     : folder === "model-2" ? PRESETS["model_2_black.glb"]
-    : ["model-3", "model-4", "model-5", "model-6"].includes(folder) ? { widthMm: 150, rotation: new THREE.Matrix4() }
+    : ["model-3", "model-4", "model-5"].includes(folder) ? { widthMm: 150, rotation: new THREE.Matrix4() }
+    : folder === "model-6" ? { widthMm: 175, rotation: new THREE.Matrix4() }
     : PRESETS[filename];
   if (!preset) throw new Error(`No orientation preset configured for GLB: ${filename}`);
 
