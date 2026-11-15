@@ -169,6 +169,8 @@
 .consent-disagree{background:#e5e5e7;color:#25272a}
 .consent-agree{background:#202124;color:#fff;display:flex;align-items:center;justify-content:center;gap:12px}
 @media(max-width:720px){.consent-backdrop{padding:10px;overflow:auto;align-items:start}.consent-dialog{grid-template-columns:1fr;min-height:0;margin:10px 0}.consent-visual{padding:35px 24px 27px}.consent-illustration{margin-bottom:18px}.consent-phone{width:65px;height:112px}.consent-frame-stack{gap:5px}.consent-frame-stack svg{width:28px;height:28px}.consent-visual>p{font-size:12px}.consent-brand{margin-top:14px}.consent-copy{padding:32px 24px 20px}.consent-copy h2{font-size:26px}.consent-points{gap:17px;margin:24px 0}.consent-actions{position:sticky;bottom:0;background:#fff}}
+/* Compact camera consent on phones so less scrolling is needed */
+@media(max-width:720px){.consent-visual{padding:22px 24px 14px}.consent-illustration{margin-bottom:10px}.consent-visual>p{display:none}.consent-brand{margin-top:8px}.consent-copy{padding:18px 24px 14px}.consent-copy h2{font-size:24px;margin:8px 0}.consent-points{gap:14px;margin:16px 0}.consent-note{padding-top:10px}.consent-actions{padding-top:14px;padding-bottom:4px}}
 
 /* Clean front-facing product cards */
 .product-grid{gap:30px 24px}
