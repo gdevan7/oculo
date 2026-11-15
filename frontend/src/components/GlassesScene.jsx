@@ -31,9 +31,9 @@ export default function GlassesScene({ glasses, trackRef, enabled }) {
     occluder.renderOrder = -1;
     pivot.add(occluder);
     const holder = new THREE.Group();
-    // Lower the frame slightly relative to the eye landmarks so its top rim
-    // sits at/below the eyebrow line instead of riding above it.
-    holder.position.set(0, -4, GLASSES_Z);
+    // Small upward calibration: the GLB's optical center sits slightly below
+    // the eye-line anchor, so compensate consistently at every head angle.
+    holder.position.set(0, -1.5, GLASSES_Z);
     pivot.add(holder);
 
     let model = null, curKey = "", raf = 0, first = true, loadToken = 0, dead = false;
@@ -124,7 +124,7 @@ export default function GlassesScene({ glasses, trackRef, enabled }) {
         pivot.scale.setScalar(THREE.MathUtils.lerp(pivot.scale.x || s, s, first ? 1 : 0.4));
         if (basisValid) {
           if (first) pivot.quaternion.copy(tq);
-          else pivot.quaternion.slerp(tq, 0.35);
+          else pivot.quaternion.slerp(tq, 0.28);
         }
         first = false;
       }
