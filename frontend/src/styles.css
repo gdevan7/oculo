@@ -361,3 +361,7 @@
  .modal-camera-column .camera-stage{flex:1;min-height:0}
  .modal-details{min-height:510px;justify-content:flex-end;padding:25px 20px}
 }
+
+@media(max-width:680px){
+ .modal-camera-column .tryon-card{position:relative}
+}
