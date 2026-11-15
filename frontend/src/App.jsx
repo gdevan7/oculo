@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { ArrowRight, Check, CheckCircle2, ChevronDown, Glasses, HelpCircle, ShieldCheck, Sparkles, UserRound, X, Heart, Camera, Image as ImageIcon, Video, Ruler, SlidersHorizontal } from "lucide-react";
+import { ArrowRight, Check, CheckCircle2, ChevronDown, Glasses, HelpCircle, ShieldCheck, Sparkles, UserRound, X, Heart } from "lucide-react";
 import CameraStage from "./components/CameraStage.jsx";
 import ProductModelPreview from "./components/ProductModelPreview.jsx";
 import { getGlasses } from "./services/api.js";
@@ -144,11 +144,6 @@ function CameraConsent({ onAgree, onDisagree }) {
 
 function TryOnModal({ product, onClose, onSelect }) {
   const [favorite, setFavorite] = useState(false);
-  const [activeTab, setActiveTab] = useState("color");
-  const [lensTint, setLensTint] = useState("Smoke");
-  const [frameSize, setFrameSize] = useState("M");
-  const [frameFit, setFrameFit] = useState("Regular");
-  const [showPurchaseNote, setShowPurchaseNote] = useState(false);
 
   useEffect(() => {
     const onKeyDown = (event) => event.key === "Escape" && onClose();
@@ -160,9 +155,6 @@ function TryOnModal({ product, onClose, onSelect }) {
     };
   }, [onClose]);
 
-  const capture = () => document.querySelector(".modal-camera-column .icon-button")?.click();
-  const openGallery = () => document.getElementById("tryon-gallery-input")?.click();
-
   return (
     <div className="tryon-backdrop" onMouseDown={(event) => event.target === event.currentTarget && onClose()}>
       <section className="tryon-modal" role="dialog" aria-modal="true" aria-label={"Virtual try-on: " + product.name}>
@@ -170,45 +162,21 @@ function TryOnModal({ product, onClose, onSelect }) {
           <button className={"tryon-favorite " + (favorite ? "is-favorite" : "")} onClick={() => setFavorite(!favorite)} aria-label="Toggle favorite" aria-pressed={favorite}><Heart size={25} fill={favorite ? "currentColor" : "none"}/></button>
           <button className="modal-close" onClick={onClose} aria-label="Close try-on"><X size={27}/></button>
           <div className="modal-camera-column">
-            <div className="modal-camera-heading"><span className="modal-live-dot"/> LIVE VIRTUAL TRY-ON <span className="modal-camera-private"><ShieldCheck size={13}/> Private camera</span></div>
             <CameraStage glasses={product}/>
-            <p className="modal-camera-footnote">Allow camera access when your browser asks. Your video is processed locally.</p>
-            <div className="tryon-media-actions">
-              <button onClick={capture} aria-label="Take photo"><Camera size={29}/></button>
-              <button onClick={openGallery} aria-label="Choose photo"><ImageIcon size={23}/></button>
-              <button onClick={() => document.querySelector(".modal-camera-column .primary-button, .modal-camera-column .secondary-button")?.click()} aria-label="Toggle video camera"><Video size={25}/></button>
-              <input id="tryon-gallery-input" type="file" accept="image/*" hidden onChange={(event) => { if (event.target.files?.[0]) setShowPurchaseNote(true); }}/>
-            </div>
           </div>
         </div>
         <aside className="modal-details">
-          <div className="modal-product-heading"><span className="eyebrow">YOUR FITTING ROOM</span><h2>{product.name}</h2><p>{product.subtitle}</p></div>
-          <div className="tryon-option-tabs" role="tablist" aria-label="Frame settings">
-            <button className={activeTab === "color" ? "active" : ""} onClick={() => setActiveTab("color")}><span className="tab-color-dot" style={{background:product.frame_color || "#17191d"}}/>Color</button>
-            <button className={activeTab === "lens" ? "active" : ""} onClick={() => setActiveTab("lens")}><span className="tab-lens-icon"/>Lens Tint</button>
-            <button className={activeTab === "size" ? "active" : ""} onClick={() => setActiveTab("size")}><span className="tab-size-icon">{frameSize}</span>Size</button>
-            <button className={activeTab === "fit" ? "active" : ""} onClick={() => setActiveTab("fit")}><Ruler size={22}/>Frame Fit</button>
+          <div className="color-options-heading"><strong>Frame color</strong><span>{product.colors?.length || 0} colors</span></div>
+          <div className="modal-style-list">
+            {(product.colors || []).map((color) => (
+              <button key={color.id} className={"modal-style-chip " + ((product.color_id || product.colors?.[0]?.id) === color.id ? "active" : "")}
+                onClick={() => onSelect({ ...product, model_url: color.model_url, color_id: color.id, color_name: color.name, frame_color: color.hex })}
+                aria-label={"Choose " + color.name} aria-pressed={(product.color_id || product.colors?.[0]?.id) === color.id}>
+                <span className="style-swatch" style={{ backgroundColor: color.hex }}/>{color.name}
+                {(product.color_id || product.colors?.[0]?.id) === color.id && <Check size={14}/>}
+              </button>
+            ))}
           </div>
-          <div className="tryon-option-content">
-            {activeTab === "color" && <div className="modal-style-list">
-              {(product.colors || []).map((color) => (
-                <button key={color.id} className={"modal-style-chip " + ((product.color_id || product.colors?.[0]?.id) === color.id ? "active" : "")}
-                  onClick={() => onSelect({ ...product, model_url: color.model_url, color_id: color.id, color_name: color.name, frame_color: color.hex })}
-                  aria-label={"Choose " + color.name} aria-pressed={(product.color_id || product.colors?.[0]?.id) === color.id}>
-                  <span className="style-swatch" style={{ backgroundColor: color.hex }}/>{color.name}
-                  {(product.color_id || product.colors?.[0]?.id) === color.id && <Check size={14}/>}
-                </button>
-              ))}
-            </div>}
-            {activeTab === "lens" && <div className="tryon-choice-row">{["Clear","Smoke","Brown","Blue"].map((v) => <button key={v} className={lensTint === v ? "selected" : ""} onClick={() => setLensTint(v)}><span className={"lens-choice lens-" + v.toLowerCase()}/>{v}</button>)}</div>}
-            {activeTab === "size" && <div className="tryon-choice-row size-choices">{["S","M","L"].map((v) => <button key={v} className={frameSize === v ? "selected" : ""} onClick={() => setFrameSize(v)}>{v}<small>{v === "S" ? "Small" : v === "M" ? "Medium" : "Large"}</small></button>)}</div>}
-            {activeTab === "fit" && <div className="tryon-choice-row fit-choices">{["Narrow","Regular","Wide"].map((v) => <button key={v} className={frameFit === v ? "selected" : ""} onClick={() => setFrameFit(v)}>{v}</button>)}</div>}
-          </div>
-          <div className="modal-bottom">
-            <button className="similar-styles-button" onClick={onClose}>Similar Styles</button>
-            <button className="buy-now-button" onClick={() => setShowPurchaseNote(true)}>Buy now</button>
-          </div>
-          {showPurchaseNote && <p className="purchase-note" role="status">Photo selection and checkout are not connected in this MVP yet.</p>}
         </aside>
       </section>
     </div>
