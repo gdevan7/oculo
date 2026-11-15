@@ -95,7 +95,6 @@ export default function CameraStage({ glasses }) {
             baseOptions: { modelAssetPath: MODEL, delegate },
             runningMode: "VIDEO",
             numFaces: 1,
-            outputFacialTransformationMatrixes: true,
           });
         try {
           tracker.current = await make("GPU");

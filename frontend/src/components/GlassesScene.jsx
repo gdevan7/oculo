@@ -118,13 +118,13 @@ export default function GlassesScene({ glasses, trackRef, enabled }) {
         const s = eyeSpan3D / EYE_MM;
         const x = (lx + rx) / 2 - w / 2;
         const y = h / 2 - (ly + ry) / 2;
-        const a = first ? 1 : 0.6;
+        const a = first ? 1 : 0.8;
         pivot.position.x = THREE.MathUtils.lerp(pivot.position.x, x, a);
         pivot.position.y = THREE.MathUtils.lerp(pivot.position.y, y, a);
-        pivot.scale.setScalar(THREE.MathUtils.lerp(pivot.scale.x || s, s, first ? 1 : 0.4));
+        pivot.scale.setScalar(THREE.MathUtils.lerp(pivot.scale.x || s, s, first ? 1 : 0.5));
         if (basisValid) {
           if (first) pivot.quaternion.copy(tq);
-          else pivot.quaternion.slerp(tq, 0.35);
+          else pivot.quaternion.slerp(tq, 0.5);
         }
         first = false;
       }
