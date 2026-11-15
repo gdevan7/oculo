@@ -331,3 +331,33 @@
  .tryon-media-actions{display:none}
  .modal-bottom{margin-top:auto}
 }
+
+
+/* Simplified try-on: camera-first layout with color-only options */
+.color-options-heading{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;font-size:12px}
+.color-options-heading span{font-size:10px;color:#999}
+.modal-details>.modal-style-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;margin:0}
+.tryon-modal .modal-camera-heading,.tryon-modal .modal-camera-footnote,.tryon-modal .tryon-media-actions{display:none!important}
+@media(max-width:680px){
+ .tryon-backdrop{padding:0;overflow:hidden}
+ .tryon-modal{height:100dvh;max-height:100dvh;min-height:0}
+ .tryon-viewer{flex:1 1 auto;min-height:0}
+ .modal-camera-column{padding:0;flex:1;min-height:0;background:#e7e9ec}
+ .modal-camera-column .tryon-card{flex:1;min-height:0}
+ .modal-camera-column .camera-stage{flex:1;min-height:0!important;height:auto;aspect-ratio:auto!important}
+ .modal-camera-column .stage-actions{position:absolute;left:16px;right:16px;bottom:16px;z-index:6;justify-content:center;gap:9px;padding:0}
+ .modal-camera-column .secondary-button{background:#fff;border-color:#fff;color:#252525;border-radius:999px;padding:13px 20px;box-shadow:0 4px 16px #00000012}
+ .modal-camera-column .text-button{background:#17191ddd;color:#fff;border-radius:999px;padding:13px 17px}
+ .modal-details{flex:0 0 auto;padding:15px 17px max(16px,env(safe-area-inset-bottom));border-radius:20px 20px 0 0;background:#fff;box-shadow:0 -5px 20px #0000000b}
+ .color-options-heading{margin-bottom:10px;font-size:11px}
+ .modal-details>.modal-style-list{gap:7px}
+ .modal-style-chip{min-height:38px;padding:7px 9px;font-size:10px}
+}
+@media(min-width:681px){
+ .tryon-modal{grid-template-columns:minmax(0,1fr) 300px}
+ .tryon-viewer{min-height:510px}
+ .modal-camera-column{padding:0;min-height:0}
+ .modal-camera-column .tryon-card{height:100%;min-height:0}
+ .modal-camera-column .camera-stage{flex:1;min-height:0}
+ .modal-details{min-height:510px;justify-content:flex-end;padding:25px 20px}
+}
