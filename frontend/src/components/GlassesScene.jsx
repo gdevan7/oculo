@@ -4,6 +4,10 @@ import { loadGlbFrame, disposeGlbCache } from "./glbFrame.js";
 
 const EYE_MM = 90;
 const GLASSES_Z = 20;
+// Share of the head's up/down tilt that the glasses follow (0..1). A head tilted
+// down lifts the temple arms above the frame corners as thin spikes; following
+// only part of the tilt keeps them pointing straight back. Yaw and roll stay 1:1.
+const PITCH_FOLLOW = 0.3;
 
 export default function GlassesScene({ glasses, trackRef, enabled }) {
   const host = useRef(null);
@@ -51,7 +55,7 @@ export default function GlassesScene({ glasses, trackRef, enabled }) {
     const eyeLeft = new THREE.Vector3(), eyeRight = new THREE.Vector3();
     const faceTop = new THREE.Vector3(), faceChin = new THREE.Vector3();
     const rightAxis = new THREE.Vector3(), upAxis = new THREE.Vector3(), forwardAxis = new THREE.Vector3();
-    const tq = new THREE.Quaternion();
+    const tq = new THREE.Quaternion(), eul = new THREE.Euler();
 
     const loop = () => {
       const { glasses, enabled } = props.current;
@@ -108,6 +112,9 @@ export default function GlassesScene({ glasses, trackRef, enabled }) {
         if (basisValid) {
           faceBasis.makeBasis(rightAxis, upAxis, forwardAxis);
           tq.setFromRotationMatrix(faceBasis);
+          eul.setFromQuaternion(tq, "YXZ");
+          eul.x *= PITCH_FOLLOW;
+          tq.setFromEuler(eul);
         }
 
         // Apply the same object-fit: cover crop to the eye midpoint as the video.
