@@ -12,6 +12,10 @@ const PITCH_FOLLOW = 0.3;
 // visible. A real arm disappears behind the ear about 80 mm behind the hinge;
 // without this cut the full 150 mm arm sticks out past the head when it turns.
 const ARM_VISIBLE_MM = 85;
+// Half-width (mm) of the invisible face block just behind the lenses. It must stay
+// narrower than the temple arms (narrowest is about 68 mm from the centre) so the
+// near arm is never hidden, but wide enough that a turned face hides the far arm.
+const FACE_HALF_MM = 60;
 
 export default function GlassesScene({ glasses, trackRef, enabled }) {
   const host = useRef(null);
@@ -45,6 +49,13 @@ export default function GlassesScene({ glasses, trackRef, enabled }) {
     armCut.position.set(0, 0, GLASSES_Z - ARM_VISIBLE_MM - 100);
     armCut.renderOrder = -1;
     pivot.add(armCut);
+    // Invisible face block (depth only) from just behind the lenses (z = +5) back to z = -100.
+    // When the head turns, the far temple arm is hidden behind it instead of showing through the lens.
+    const faceBlock = new THREE.Mesh(new THREE.BoxGeometry(1, 1, 1), new THREE.MeshBasicMaterial({ colorWrite: false }));
+    faceBlock.scale.set(FACE_HALF_MM * 2, 180, 105);
+    faceBlock.position.set(0, 0, -47.5);
+    faceBlock.renderOrder = -1;
+    pivot.add(faceBlock);
     const holder = new THREE.Group();
     // Vertical fit relative to the eye landmarks (1 unit is roughly 1 mm).
     // -4 left the lenses too low on the eyes; 0 puts the eyes closer to the lens
@@ -154,7 +165,8 @@ export default function GlassesScene({ glasses, trackRef, enabled }) {
     return () => {
       dead = true; cancelAnimationFrame(raf); obs.disconnect(); disposeModel(); disposeGlbCache();
       occluder.geometry.dispose(); occluder.material.dispose();
-      armCut.geometry.dispose(); armCut.material.dispose(); renderer.dispose(); renderer.domElement.remove();
+      armCut.geometry.dispose(); armCut.material.dispose();
+      faceBlock.geometry.dispose(); faceBlock.material.dispose(); renderer.dispose(); renderer.domElement.remove();
     };
   }, [trackRef]);
   return <div ref={host} className="glasses-scene" />;
