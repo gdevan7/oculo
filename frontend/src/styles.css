@@ -367,3 +367,11 @@
 @media(max-width:680px){
  .modal-camera-column .tryon-card{position:relative}
 }
+
+/* Large desktop try-on window: the camera view fills most of the screen so the whole face is visible */
+@media(min-width:681px){
+ .tryon-backdrop{padding:20px}
+ .tryon-modal{width:min(1600px,100%);height:min(940px,calc(100vh - 40px));max-height:none;min-height:0;grid-template-columns:minmax(0,1fr) 300px;overflow:hidden}
+ .tryon-viewer{min-height:0;height:100%}
+ .tryon-modal .modal-details{min-height:0;overflow:auto}
+}
