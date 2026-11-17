@@ -7,6 +7,8 @@ const MODEL =
   "https://storage.googleapis.com/mediapipe-models/face_landmarker/face_landmarker/float16/1/face_landmarker.task";
 const WASM = "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.20/wasm";
 const DEFAULT_AR = "16/10";
+// Add ?debug to the page URL to show how long each face detection takes on this device.
+const DEBUG = typeof window !== "undefined" && new URLSearchParams(window.location.search).has("debug");
 
 export default function CameraStage({ glasses }) {
   const video = useRef(null);
@@ -17,6 +19,8 @@ export default function CameraStage({ glasses }) {
   // Landmark + matriks pose disimpan di ref agar tidak memicu render React tiap frame.
   const track = useRef({ lm: null, matrix: null });
   const hasFace = useRef(false);
+  const dbg = useRef(null);
+  const stats = useRef({ ema: 0, n: 0, since: 0 });
 
   const [on, setOn] = useState(false);
   const [face, setFace] = useState(false);
@@ -47,13 +51,25 @@ export default function CameraStage({ glasses }) {
     if (v && tracker.current && v.readyState >= 2 && v.currentTime !== last.current) {
       last.current = v.currentTime;
       try {
-        const r = tracker.current.detectForVideo(v, performance.now());
+        const t0 = performance.now();
+        const r = tracker.current.detectForVideo(v, t0);
+        if (DEBUG) {
+          const t1 = performance.now(), st = stats.current;
+          st.ema = st.ema ? st.ema * 0.9 + (t1 - t0) * 0.1 : t1 - t0;
+          st.n++;
+          if (!st.since) st.since = t1;
+          if (t1 - st.since >= 1000 && dbg.current) {
+            dbg.current.textContent = `detect ${st.ema.toFixed(0)} ms · ${((st.n * 1000) / (t1 - st.since)).toFixed(0)} Hz`;
+            st.n = 0; st.since = t1;
+          }
+        }
         if (r.faceLandmarks?.length) {
           track.current = {
             lm: r.faceLandmarks[0],
             matrix: r.facialTransformationMatrixes?.[0]?.data ?? null,
             videoWidth: v.videoWidth,
             videoHeight: v.videoHeight,
+            t: t0, // when this frame was picked up for detection; used to compensate latency
           };
           if (!hasFace.current) {
             hasFace.current = true;
@@ -189,6 +205,16 @@ export default function CameraStage({ glasses }) {
           <GlassesScene glasses={glasses} trackRef={track} enabled={on} />
         </div>
         {on && !face && <div className="tracking-hint">Center your face in the frame</div>}
+        {DEBUG && on && (
+          <div
+            ref={dbg}
+            style={{
+              position: "absolute", left: 8, bottom: 8, zIndex: 5, pointerEvents: "none",
+              font: "11px/1.4 monospace", color: "#fff", background: "rgba(0,0,0,.6)",
+              padding: "2px 6px", borderRadius: 4,
+            }}
+          />
+        )}
       </div>
       {error && (
         <div className="error-banner" role="alert">

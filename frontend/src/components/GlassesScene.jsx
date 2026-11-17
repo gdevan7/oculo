@@ -17,6 +17,38 @@ const ARM_VISIBLE_MM = 85;
 // near arm is never hidden, but wide enough that a turned face hides the far arm.
 const FACE_HALF_MM = 60;
 
+// Latency compensation. Detection runs on the main thread, so every pose is already a few
+// frames old when it is drawn. Each channel keeps a smoothed velocity and is drawn slightly
+// ahead along it. The lead is capped, and a dead band keeps a still head still.
+// Add ?nopredict to the page URL to switch it off for an A/B comparison.
+const PREDICT = typeof window === "undefined" || !new URLSearchParams(window.location.search).has("nopredict");
+const PREDICT_EXTRA_S = 0.02; // vsync/compositing delay that JS cannot see
+const TAU_POS = 0.012, TAU_ROT = 0.03, TAU_SCALE = 0.03; // render smoothing time constants (s)
+
+class Lead {
+  constructor(dead, cap) { this.dead = dead; this.cap = cap; this.reset(); }
+  reset() { this.v = 0; this.t = 0; this.vel = 0; this.has = false; }
+  push(value, timeMs) {
+    if (this.has) {
+      const dt = (timeMs - this.t) / 1000;
+      if (dt > 0.25) this.vel = 0;
+      else if (dt > 0.004) {
+        const raw = (value - this.v) / dt;
+        // Follow speed-ups slowly (less noise) but let go of the velocity faster when slowing down.
+        const tc = Math.abs(raw) >= Math.abs(this.vel) ? 0.12 : 0.05;
+        this.vel += (raw - this.vel) * (1 - Math.exp(-dt / tc));
+      }
+    }
+    this.v = value; this.t = timeMs; this.has = true;
+  }
+  at(nowMs, tau) {
+    if (!PREDICT) return this.v;
+    const h = Math.min((nowMs - this.t) / 1000 + PREDICT_EXTRA_S + tau, 0.25);
+    const mag = Math.max(0, Math.abs(this.vel) - this.dead);
+    return this.v + Math.max(-this.cap, Math.min(this.cap, Math.sign(this.vel) * mag * h));
+  }
+}
+
 export default function GlassesScene({ glasses, trackRef, enabled }) {
   const host = useRef(null);
   const props = useRef({ glasses, enabled });
@@ -78,6 +110,14 @@ export default function GlassesScene({ glasses, trackRef, enabled }) {
     const faceTop = new THREE.Vector3(), faceChin = new THREE.Vector3();
     const rightAxis = new THREE.Vector3(), upAxis = new THREE.Vector3(), forwardAxis = new THREE.Vector3();
     const tq = new THREE.Quaternion(), eul = new THREE.Euler();
+    const D2R = Math.PI / 180;
+    // dead band / lead cap per channel: position in px, scale in ln(scale), angles in radians
+    const leads = {
+      x: new Lead(12, 12), y: new Lead(12, 12), s: new Lead(0.05, 0.03),
+      yaw: new Lead(8 * D2R, 4 * D2R), pitch: new Lead(8 * D2R, 4 * D2R), roll: new Lead(8 * D2R, 4 * D2R),
+    };
+    const resetLeads = () => Object.values(leads).forEach((l) => l.reset());
+    let lastSample = null, lastFrame = performance.now();
 
     const loop = () => {
       const { glasses, enabled } = props.current;
@@ -94,7 +134,7 @@ export default function GlassesScene({ glasses, trackRef, enabled }) {
         });
       }
       const ok = Boolean(enabled && model && t?.lm?.[33] && t?.lm?.[263] && t?.lm?.[10] && t?.lm?.[152]);
-      if (!ok) first = true;
+      if (!ok) { first = true; resetLeads(); lastSample = null; }
       pivot.visible = ok;
       if (ok) {
         const w = el.clientWidth, h = el.clientHeight;
@@ -148,13 +188,28 @@ export default function GlassesScene({ glasses, trackRef, enabled }) {
         const s = eyeSpan3D / EYE_MM;
         const x = (lx + rx) / 2 - w / 2;
         const y = h / 2 - (ly + ry) / 2;
-        const a = first ? 1 : 0.8;
-        pivot.position.x = THREE.MathUtils.lerp(pivot.position.x, x, a);
-        pivot.position.y = THREE.MathUtils.lerp(pivot.position.y, y, a);
-        pivot.scale.setScalar(THREE.MathUtils.lerp(pivot.scale.x || s, s, first ? 1 : 0.5));
-        if (basisValid) {
+        const now = performance.now();
+        if (t !== lastSample) {
+          // New detection result: update the velocity estimates (timestamped when detection began).
+          lastSample = t;
+          const ts = t.t ?? now;
+          leads.x.push(x, ts); leads.y.push(y, ts); leads.s.push(Math.log(s), ts);
+          if (basisValid) { leads.yaw.push(eul.y, ts); leads.pitch.push(eul.x, ts); leads.roll.push(eul.z, ts); }
+        }
+        // Time-based smoothing keeps the feel the same on 60 Hz and 120 Hz screens and when frames are dropped.
+        const dt = Math.min(Math.max(now - lastFrame, 4), 100) / 1000;
+        lastFrame = now;
+        const aPos = first ? 1 : 1 - Math.exp(-dt / TAU_POS);
+        const aRot = first ? 1 : 1 - Math.exp(-dt / TAU_ROT);
+        const aScale = first ? 1 : 1 - Math.exp(-dt / TAU_SCALE);
+        pivot.position.x = THREE.MathUtils.lerp(pivot.position.x, leads.x.at(now, TAU_POS), aPos);
+        pivot.position.y = THREE.MathUtils.lerp(pivot.position.y, leads.y.at(now, TAU_POS), aPos);
+        pivot.scale.setScalar(THREE.MathUtils.lerp(pivot.scale.x || s, Math.exp(leads.s.at(now, TAU_SCALE)), aScale));
+        if (leads.yaw.has) {
+          eul.set(leads.pitch.at(now, TAU_ROT), leads.yaw.at(now, TAU_ROT), leads.roll.at(now, TAU_ROT), "YXZ");
+          tq.setFromEuler(eul);
           if (first) pivot.quaternion.copy(tq);
-          else pivot.quaternion.slerp(tq, 0.5);
+          else pivot.quaternion.slerp(tq, aRot);
         }
         first = false;
       }
