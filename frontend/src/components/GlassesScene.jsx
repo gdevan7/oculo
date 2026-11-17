@@ -31,9 +31,10 @@ export default function GlassesScene({ glasses, trackRef, enabled }) {
     occluder.renderOrder = -1;
     pivot.add(occluder);
     const holder = new THREE.Group();
-    // Lower the frame slightly relative to the eye landmarks so its top rim
-    // sits at/below the eyebrow line instead of riding above it.
-    holder.position.set(0, -4, GLASSES_Z);
+    // Vertical fit relative to the eye landmarks (1 unit is roughly 1 mm).
+    // -4 left the lenses too low on the eyes; 0 puts the eyes closer to the lens
+    // centre while the top rim still stays below the eyebrow line.
+    holder.position.set(0, 0, GLASSES_Z);
     pivot.add(holder);
 
     let model = null, curKey = "", raf = 0, first = true, loadToken = 0, dead = false;
