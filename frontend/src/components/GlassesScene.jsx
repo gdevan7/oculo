@@ -8,6 +8,10 @@ const GLASSES_Z = 20;
 // down lifts the temple arms above the frame corners as thin spikes; following
 // only part of the tilt keeps them pointing straight back. Yaw and roll stay 1:1.
 const PITCH_FOLLOW = 0.3;
+// How far back (mm, measured from the front of the frame) the temple arms stay
+// visible. A real arm disappears behind the ear about 80 mm behind the hinge;
+// without this cut the full 150 mm arm sticks out past the head when it turns.
+const ARM_VISIBLE_MM = 85;
 
 export default function GlassesScene({ glasses, trackRef, enabled }) {
   const host = useRef(null);
@@ -34,6 +38,13 @@ export default function GlassesScene({ glasses, trackRef, enabled }) {
     occluder.position.set(0, -10, -85);
     occluder.renderOrder = -1;
     pivot.add(occluder);
+    // Invisible block behind the ear point: it only writes depth, so anything inside it
+    // (the rear of the temple arms) is hidden from every viewing angle, like an ear/hair.
+    const armCut = new THREE.Mesh(new THREE.BoxGeometry(1, 1, 1), new THREE.MeshBasicMaterial({ colorWrite: false }));
+    armCut.scale.set(240, 240, 200);
+    armCut.position.set(0, 0, GLASSES_Z - ARM_VISIBLE_MM - 100);
+    armCut.renderOrder = -1;
+    pivot.add(armCut);
     const holder = new THREE.Group();
     // Vertical fit relative to the eye landmarks (1 unit is roughly 1 mm).
     // -4 left the lenses too low on the eyes; 0 puts the eyes closer to the lens
@@ -142,7 +153,8 @@ export default function GlassesScene({ glasses, trackRef, enabled }) {
     loop();
     return () => {
       dead = true; cancelAnimationFrame(raf); obs.disconnect(); disposeModel(); disposeGlbCache();
-      occluder.geometry.dispose(); occluder.material.dispose(); renderer.dispose(); renderer.domElement.remove();
+      occluder.geometry.dispose(); occluder.material.dispose();
+      armCut.geometry.dispose(); armCut.material.dispose(); renderer.dispose(); renderer.domElement.remove();
     };
   }, [trackRef]);
   return <div ref={host} className="glasses-scene" />;
