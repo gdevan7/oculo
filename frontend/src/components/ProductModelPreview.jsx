@@ -1,6 +1,34 @@
 import { useEffect, useRef, useState } from "react";
 import * as THREE from "three";
 import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
+import { straightenedX } from "../lib/straightenArms.js";
+
+// Moves the flared temple arms (Evergreen) in line with the frame. Works in the model's own units.
+function straightenModelArms(model, frontZ, unit) {
+  model.updateMatrixWorld(true);
+  const parts = [];
+  const points = [];
+  const v = new THREE.Vector3();
+  model.traverse((object) => {
+    const attr = object.isMesh && object.geometry?.attributes?.position;
+    if (!attr) return;
+    const start = points.length;
+    for (let i = 0; i < attr.count; i++) {
+      v.fromBufferAttribute(attr, i).applyMatrix4(object.matrixWorld);
+      points.push({ x: v.x, y: v.y, z: v.z });
+    }
+    parts.push({ attr, inverse: object.matrixWorld.clone().invert(), start });
+  });
+  const xs = straightenedX(points, frontZ, unit);
+  parts.forEach(({ attr, inverse, start }) => {
+    for (let i = 0; i < attr.count; i++) {
+      const p = points[start + i];
+      v.set(xs[start + i], p.y, p.z).applyMatrix4(inverse);
+      attr.setXYZ(i, v.x, v.y, v.z);
+    }
+    attr.needsUpdate = true;
+  });
+}
 
 const PRESETS = {
   "model_0_black.glb": new THREE.Matrix4().set(
@@ -122,6 +150,9 @@ export default function ProductModelPreview({ item }) {
           setFailed(true);
           return;
         }
+
+        // Evergreen's temple arms flare outward; line them up with the frame like the other models.
+        if (folder === "model-6") straightenModelArms(model, bounds.max.z, size.x / targetWidthMm);
 
         const normalized = new THREE.Group();
         model.position.set(-center.x, -center.y, -bounds.max.z);
