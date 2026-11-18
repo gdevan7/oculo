@@ -3,6 +3,7 @@ import * as THREE from "three";
 import { loadGlbFrame, disposeGlbCache } from "./glbFrame.js";
 import { Lead, isPredictionEnabled } from "../lib/lead.js";
 import { coverCrop } from "../lib/coverCrop.js";
+import { OneEuro, isFilterEnabled } from "../lib/oneEuro.js";
 
 const EYE_MM = 90;
 const GLASSES_Z = 20;
@@ -28,6 +29,9 @@ const FACE_FRONT_Z = -1;
 // ahead along it. The lead is capped, and a dead band keeps a still head still.
 // Add ?nopredict to the page URL to switch it off for an A/B comparison.
 const PREDICT = typeof window === "undefined" || isPredictionEnabled(window.location.search);
+// Landmark noise makes the frame shake. A One Euro filter smooths hard while the head is
+// nearly still and opens up when it moves, so turns do not lag. ?nofilter turns it off.
+const FILTER = typeof window === "undefined" || isFilterEnabled(window.location.search);
 const TAU_POS = 0.012, TAU_ROT = 0.03, TAU_SCALE = 0.03; // render smoothing time constants (s)
 
 export default function GlassesScene({ glasses, trackRef, enabled }) {
@@ -97,7 +101,13 @@ export default function GlassesScene({ glasses, trackRef, enabled }) {
       x: new Lead(12, 12, PREDICT), y: new Lead(12, 12, PREDICT), s: new Lead(0.05, 0.03, PREDICT),
       yaw: new Lead(8 * D2R, 4 * D2R, PREDICT), pitch: new Lead(8 * D2R, 4 * D2R, PREDICT), roll: new Lead(8 * D2R, 4 * D2R, PREDICT),
     };
-    const resetLeads = () => Object.values(leads).forEach((l) => l.reset());
+    // (minCutoff Hz, beta): position in px, scale in ln(scale), angles in radians
+    const filters = {
+      x: new OneEuro(1.2, 0.02), y: new OneEuro(1.2, 0.02), s: new OneEuro(1.0, 20),
+      yaw: new OneEuro(1.0, 8), pitch: new OneEuro(1.0, 8), roll: new OneEuro(1.0, 8),
+    };
+    const smooth = (name, value, ts) => (FILTER ? filters[name].filter(value, ts) : value);
+    const resetLeads = () => { Object.values(leads).forEach((l) => l.reset()); Object.values(filters).forEach((f) => f.reset()); };
     let lastSample = null, lastFrame = performance.now();
 
     const loop = () => {
@@ -170,8 +180,13 @@ export default function GlassesScene({ glasses, trackRef, enabled }) {
           // New detection result: update the velocity estimates (timestamped when detection began).
           lastSample = t;
           const ts = t.t ?? now;
-          leads.x.push(x, ts); leads.y.push(y, ts); leads.s.push(Math.log(s), ts);
-          if (basisValid) { leads.yaw.push(eul.y, ts); leads.pitch.push(eul.x, ts); leads.roll.push(eul.z, ts); }
+          leads.x.push(smooth("x", x, ts), ts); leads.y.push(smooth("y", y, ts), ts);
+          leads.s.push(smooth("s", Math.log(s), ts), ts);
+          if (basisValid) {
+            leads.yaw.push(smooth("yaw", eul.y, ts), ts);
+            leads.pitch.push(smooth("pitch", eul.x, ts), ts);
+            leads.roll.push(smooth("roll", eul.z, ts), ts);
+          }
         }
         // Time-based smoothing keeps the feel the same on 60 Hz and 120 Hz screens and when frames are dropped.
         const dt = Math.min(Math.max(now - lastFrame, 4), 100) / 1000;
