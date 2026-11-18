@@ -18,6 +18,10 @@ const ARM_VISIBLE_MM = 85;
 // narrower than the temple arms (narrowest is about 68 mm from the centre) so the
 // near arm is never hidden, but wide enough that a turned face hides the far arm.
 const FACE_HALF_MM = 60;
+// The block's front face (z, mm; the glasses' front plane is at GLASSES_Z = 20). Wrap-around
+// frames such as Noir (model-3) curve back about 19 mm at the lens edges, so the front face
+// has to sit behind that curve or the block cuts jagged holes in the rim.
+const FACE_FRONT_Z = -1;
 
 // Latency compensation. Detection runs on the main thread, so every pose is already a few
 // frames old when it is drawn. Each channel keeps a smoothed velocity and is drawn slightly
@@ -61,8 +65,8 @@ export default function GlassesScene({ glasses, trackRef, enabled }) {
     // Invisible face block (depth only) from just behind the lenses (z = +5) back to z = -100.
     // When the head turns, the far temple arm is hidden behind it instead of showing through the lens.
     const faceBlock = new THREE.Mesh(new THREE.BoxGeometry(1, 1, 1), new THREE.MeshBasicMaterial({ colorWrite: false }));
-    faceBlock.scale.set(FACE_HALF_MM * 2, 180, 105);
-    faceBlock.position.set(0, 0, -47.5);
+    faceBlock.scale.set(FACE_HALF_MM * 2, 180, 100);
+    faceBlock.position.set(0, 0, FACE_FRONT_Z - 50);
     faceBlock.renderOrder = -1;
     pivot.add(faceBlock);
     const holder = new THREE.Group();
