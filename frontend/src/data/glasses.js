@@ -1,7 +1,9 @@
-// Built-in catalog. Used as-is when no API is configured, and as the base the API rows are merged into.
+// Offline copy of the catalog, shown when no API is configured or it cannot be reached. The API is the
+// source of truth: keep this in step with backend/src/modules/glasses/glasses.seed.js (a backend test
+// fails when they differ).
 export const fallbackCatalog = [
   {
-    id: "black", name: "Cloud", subtitle: "Everyday Essential",
+    id: "cloud", name: "Cloud", subtitle: "Everyday Essential",
     description: "A clean, lightweight frame for an effortless everyday look.",
     frame_color: "#17191D", style: "classic", color_id: "black",
     model_url: "/models/model-0/model_0_black.glb", price: 300000,
@@ -13,7 +15,7 @@ export const fallbackCatalog = [
     ]
   },
   {
-    id: "tortoiseshell", name: "Frankie", subtitle: "Modern Tortoise",
+    id: "frankie", name: "Frankie", subtitle: "Modern Tortoise",
     description: "Warm tortoiseshell details with a timeless silhouette.",
     frame_color: "#70452F", style: "tortoise", color_id: "tortoiseshell",
     model_url: "/models/model-1/model_1_tortoiseshell.glb", price: 250000,
@@ -25,9 +27,9 @@ export const fallbackCatalog = [
     ]
   },
   {
-    id: "black", name: "Monroe", subtitle: "Classic Black",
+    id: "monroe", name: "Monroe", subtitle: "Classic Black",
     description: "A confident black frame that goes with just about everything.",
-    frame_color: "#171717", style: "black", color_id: "black",
+    frame_color: "#17191D", style: "black", color_id: "black",
     model_url: "/models/model-2/model_2_black.glb", price: 200000,
     colors: [
       { id: "black", name: "Matte Black", hex: "#17191D", model_url: "/models/model-2/model_2_black.glb" },
@@ -37,9 +39,9 @@ export const fallbackCatalog = [
     ]
   },
 {
-    id: "model-3", name: "Noir", subtitle: "Contemporary Acetate",
+    id: "noir", name: "Noir", subtitle: "Contemporary Acetate",
     description: "A versatile silhouette with four distinctive finishes.",
-    frame_color: "#17191D", style: "classic", color_id: "black-lens",
+    frame_color: "#24272B", style: "classic", color_id: "black-lens",
     model_url: "/models/model-3/model_3_black_lens.glb", price: 200000,
     colors: [
       { id: "black-lens", name: "Black Lens", hex: "#24272B", model_url: "/models/model-3/model_3_black_lens.glb" },
@@ -49,9 +51,9 @@ export const fallbackCatalog = [
     ]
   },
   {
-    id: "model-4", name: "Browline", subtitle: "Refined Browline",
+    id: "browline", name: "Browline", subtitle: "Refined Browline",
     description: "A defined browline profile with contrasting metal details.",
-    frame_color: "#59402F", style: "tortoise", color_id: "browline-merged",
+    frame_color: "#4D4037", style: "tortoise", color_id: "browline-merged",
     model_url: "/models/model-4/model_4_browline_merged.glb", price: 500000,
     colors: [
       { id: "browline-merged", name: "Classic Browline", hex: "#4D4037", model_url: "/models/model-4/model_4_browline_merged.glb" },
@@ -61,9 +63,9 @@ export const fallbackCatalog = [
     ]
   },
   {
-    id: "model-5", name: "Heritage", subtitle: "Modern Browline",
+    id: "heritage", name: "Heritage", subtitle: "Modern Browline",
     description: "A second browline design with a distinct frame construction.",
-    frame_color: "#5B4638", style: "tortoise", color_id: "browline",
+    frame_color: "#4B3B30", style: "tortoise", color_id: "browline",
     model_url: "/models/model-5/model_5_browline.glb", price: 300000,
     colors: [
       { id: "browline", name: "Browline", hex: "#4B3B30", model_url: "/models/model-5/model_5_browline.glb" },
@@ -73,7 +75,7 @@ export const fallbackCatalog = [
     ]
   },
   {
-    id: "model-6", name: "Evergreen", subtitle: "Everyday Metal",
+    id: "evergreen", name: "Evergreen", subtitle: "Everyday Metal",
     description: "A clean everyday frame in understated natural tones.",
     frame_color: "#202326", style: "classic", color_id: "black",
     model_url: "/models/model-6/model_6_black.glb", price: 350000,
