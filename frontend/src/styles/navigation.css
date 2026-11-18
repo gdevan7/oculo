@@ -1,0 +1,65 @@
+/* Three-view Frame Studio navigation: home (brand), catalog and about */
+.catalog-header{position:relative}
+.catalog-brand{border:0;background:transparent;padding:0;cursor:pointer;color:#17191d}
+.catalog-nav{gap:38px}
+.catalog-nav button{height:100%;display:flex;align-items:center;position:relative;border:0;background:transparent;padding:0;color:#64676b;font:500 12px 'DM Sans',sans-serif}
+.catalog-nav button.nav-active{color:#17191d;font-weight:700}
+.catalog-nav button.nav-active:after{content:"";position:absolute;bottom:0;left:0;right:0;height:2px;background:#b78a55}
+.header-profile{width:38px;height:38px;display:grid;place-items:center;border:1px solid #e9e6e1;border-radius:50%;background:#fff;color:#5b5d60;transition:.2s}
+.header-profile:hover{background:#f7f3ed;border-color:#d7c2a8;color:#9b744c}
+.home-hero{padding-top:62px;padding-bottom:68px;gap:54px}
+.home-try-button,.home-secondary-button{display:inline-flex;align-items:center;justify-content:center;gap:12px;border:0;background:#b78a55;color:#fff;padding:13px 23px;border-radius:3px;font-size:12px;font-weight:700;margin-top:18px;transition:background .2s,transform .2s}
+.home-try-button:hover,.home-secondary-button:hover{background:#9b7043;transform:translateY(-1px)}
+.home-intro{padding:62px 8%;text-align:center;border-top:1px solid #f0eeeb;border-bottom:1px solid #f0eeeb}
+.home-intro .eyebrow{justify-content:center}
+.home-intro h2,.about-copy h2{font:750 clamp(28px,3vw,39px)/1.15 Manrope,sans-serif;letter-spacing:-1.5px;margin:13px 0}
+.home-intro p,.about-copy p{font-size:14px;line-height:1.8;color:#74777b;max-width:610px;margin:0 auto}
+.home-secondary-button{background:#fff;color:#8d6945;border:1px solid #c6a27b}
+.about-section{display:grid;grid-template-columns:1fr 1fr;gap:70px;padding:76px 3% 82px;scroll-margin-top:28px}
+.about-copy h2{max-width:430px}
+.about-copy p{margin:0;max-width:480px}
+.about-points{display:grid;gap:22px;align-content:center}
+.about-points>div{display:flex;align-items:flex-start;gap:14px;color:#a27b51}
+.about-points span{display:grid;gap:5px;color:#25272a}
+.about-points strong{font:700 13px Manrope}
+.about-points small{font-size:11px;line-height:1.6;color:#777b80}
+.catalog-only{padding-top:54px;min-height:calc(100vh - 165px)}
+.catalog-only .catalog-section-heading{margin-bottom:28px}
+.catalog-only .catalog-section-heading h2{font-size:32px}
+.catalog-footer{border-top:1px solid #efefed;min-height:86px}
+.footer-home-link{cursor:pointer}
+.login-backdrop{position:fixed;inset:0;z-index:120;background:#10121680;display:grid;place-items:center;padding:20px}
+.login-dialog{position:relative;width:min(100%,410px);background:#fff;border-radius:12px;padding:36px;box-shadow:0 24px 80px #0002;display:flex;flex-direction:column;align-items:flex-start;gap:13px}
+.login-close{position:absolute;top:14px;right:14px;width:34px;height:34px;border:0;border-radius:50%;background:#f5f4f2;color:#555;display:grid;place-items:center}
+.login-icon{width:43px;height:43px;margin-bottom:5px}
+.login-dialog .eyebrow{font-size:9px}
+.login-dialog h2{font:800 28px Manrope;margin:0;letter-spacing:-1px}
+.login-dialog>p{font-size:12px;line-height:1.6;color:#777;margin:0 0 5px}
+.login-dialog label{display:grid;gap:7px;width:100%;font-size:11px;font-weight:700;color:#45484b}
+.login-dialog input{height:42px;border:1px solid #e7e5e1;border-radius:6px;padding:0 12px;font:12px 'DM Sans',sans-serif;background:#f8f7f5}
+.login-submit{height:43px;width:100%;border:0;border-radius:6px;background:#b78a55;color:#fff;font-size:12px;font-weight:700;margin-top:5px}
+.login-submit:disabled{opacity:.65;cursor:not-allowed}
+.login-dialog>small{font-size:10px;line-height:1.5;color:#999;text-align:center;width:100%}
+@media(max-width:760px){
+ .catalog-page{padding:0 18px}
+ .catalog-header{height:70px}
+ .catalog-brand{font-size:17px;gap:7px}
+ .catalog-brand-icon{width:32px;height:32px}
+ .catalog-nav{gap:17px}
+ .catalog-nav button{font-size:11px}
+ .header-profile{width:34px;height:34px}
+ .home-hero{padding:36px 0 42px;gap:24px}
+ .home-hero h1{font-size:clamp(40px,10vw,54px);letter-spacing:-2.6px}
+ .home-intro{padding:44px 4%}
+ .about-section{grid-template-columns:1fr;gap:30px;padding:48px 2%}
+ .catalog-only{padding-top:36px}
+ .catalog-only .catalog-section-heading h2{font-size:25px}
+}
+@media(max-width:430px){
+ .catalog-nav{gap:12px}
+ .catalog-nav button{font-size:10px}
+ .catalog-brand{font-size:15px}
+ .catalog-brand-icon{width:29px;height:29px}
+ .header-profile{width:31px;height:31px}
+ .login-dialog{padding:28px 22px}
+}

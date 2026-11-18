@@ -1,0 +1,65 @@
+/* Mobile-first immersive virtual try-on redesign */
+.tryon-viewer{position:relative;min-width:0;display:flex;flex-direction:column;background:#e9edf1}
+.tryon-favorite{position:absolute;z-index:8;top:18px;left:18px;width:48px;height:48px;border:0;border-radius:50%;background:#fff;color:#565b60;display:grid;place-items:center;box-shadow:0 5px 20px #00000012}
+.tryon-favorite.is-favorite{color:#c46b78}
+.tryon-media-actions{display:flex;align-items:center;justify-content:center;gap:16px;padding:12px 0 3px}
+.tryon-media-actions button{width:54px;height:54px;border:0;border-radius:50%;background:#f3f4f5;color:#16191d;display:grid;place-items:center}
+.tryon-media-actions button:first-child{width:76px;height:76px;background:#fff;border:7px solid #f0f0ef;box-shadow:0 4px 18px #00000010}
+.tryon-option-tabs{display:grid;grid-template-columns:repeat(4,1fr);gap:4px;margin:0 0 12px;padding:0 0 11px;border-bottom:1px solid #ededed}
+.tryon-option-tabs button{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:9px;min-width:0;padding:5px 2px;border:0;background:transparent;color:#777;font-size:11px}
+.tryon-option-tabs button.active{color:#252525;font-weight:700}
+.tab-color-dot{width:35px;height:35px;border:2px solid #d3a65d;border-radius:50%;box-shadow:inset 0 0 0 3px white}
+.tab-lens-icon{width:38px;height:28px;border-radius:8px 8px 14px 14px;background:linear-gradient(135deg,#9ca8b2,#424e5a);border:1px solid #8b959d}
+.tab-size-icon{width:35px;height:35px;border:2px solid #d3a65d;border-radius:50%;display:grid;place-items:center;font-size:16px;color:#17191d}
+.tryon-option-content{min-height:90px}
+.tryon-option-content .modal-style-list{grid-template-columns:repeat(2,minmax(0,1fr))}
+.tryon-choice-row{display:flex;align-items:center;justify-content:space-around;gap:8px}
+.tryon-choice-row button{display:flex;flex-direction:column;align-items:center;gap:7px;min-width:58px;padding:8px 10px;border:1px solid #e9e9e9;border-radius:12px;background:#fff;color:#686868;font-size:11px}
+.tryon-choice-row button.selected{border-color:#c99a53;background:#fffaf2;color:#29231c}
+.lens-choice{width:35px;height:29px;border-radius:7px 7px 13px 13px;background:#dce4e8;border:1px solid #aab4ba}
+.lens-smoke{background:#59636d}.lens-brown{background:#8c6248}.lens-blue{background:#718fa9}
+.size-choices button{min-width:72px;font-size:16px;font-weight:700}
+.size-choices small{font-size:9px;font-weight:400;color:#888}
+.fit-choices button{min-width:82px}
+.similar-styles-button,.buy-now-button{flex:1;min-height:50px;border-radius:9px;font-size:13px;font-weight:600}
+.similar-styles-button{border:1px solid #e3e3e3;background:#fff;color:#17191d}
+.buy-now-button{border:1px solid #d3a04f;background:#d3a04f;color:#fff}
+.purchase-note{font-size:10px;color:#8a6a3e;text-align:center;margin:8px 0 0}
+@media(max-width:680px){
+ .tryon-backdrop{inset:0;padding:0;align-items:stretch;overflow:hidden;background:#151515}
+ .tryon-modal{width:100%;height:100%;height:100dvh;max-height:none;min-height:0;margin:0;border-radius:0;display:flex;flex-direction:column;overflow:hidden;box-shadow:none;background:#fff}
+ .tryon-viewer{flex:1 1 auto;min-height:0;overflow:hidden;background:#e7e9ec}
+ .tryon-favorite{top:18px;left:18px;width:46px;height:46px}
+ .modal-close{position:absolute;top:18px;right:18px;align-self:auto;float:none;margin:0;width:46px;height:46px;z-index:9}
+ .modal-camera-column{padding:0;background:#e7e9ec;flex:1;min-height:0;display:flex}
+ .modal-camera-heading{position:absolute;top:76px;left:18px;right:18px;z-index:4;height:auto;margin:0;color:#fff;text-shadow:0 1px 4px #0008;font-size:8px}
+ .modal-camera-private{color:#fff}
+ .modal-camera-column .tryon-card{flex:1;min-height:0;display:flex}
+ .modal-camera-column .camera-stage{flex:1;min-height:0!important;height:100%;aspect-ratio:auto!important;background:#dce1e6}
+ .modal-camera-column .camera-video{object-fit:cover}
+ .modal-camera-column .camera-placeholder{background:linear-gradient(145deg,#e8edf1,#cfd8df)}
+ .modal-camera-column .stage-actions{position:absolute;left:18px;right:18px;bottom:96px;z-index:5;justify-content:center;padding:0}
+ .modal-camera-column .primary-button,.modal-camera-column .secondary-button{background:#fff;border-color:#fff;color:#222;border-radius:999px;padding:13px 22px}
+ .modal-camera-column .text-button{color:#fff;background:#1118;border-radius:999px}
+ .modal-camera-footnote{display:none}
+ .tryon-media-actions{position:absolute;z-index:6;bottom:10px;left:0;right:0;padding:0;gap:14px}
+ .tryon-media-actions button{width:48px;height:48px;background:#f5f5f5eF}
+ .tryon-media-actions button:first-child{width:70px;height:70px}
+ .modal-details{flex:0 0 auto;padding:17px 18px max(16px,env(safe-area-inset-bottom));border-radius:22px 22px 0 0;background:#fff;box-shadow:0 -8px 25px #0000000b;z-index:7}
+ .modal-product-heading{display:none}
+ .tryon-option-tabs{margin-bottom:10px;padding-bottom:10px}
+ .tryon-option-tabs button{font-size:10px;gap:7px}
+ .tryon-option-content{min-height:74px;max-height:116px;overflow:auto}
+ .tryon-option-content .modal-style-list{gap:7px;margin-top:0}
+ .modal-style-chip{min-height:38px;padding:7px 9px;font-size:10px}
+ .modal-bottom{margin-top:12px;padding:0;border:0;display:flex;gap:10px}
+ .similar-styles-button,.buy-now-button{min-height:48px}
+ .purchase-note{margin:6px 0 0}
+}
+@media(min-width:681px){
+ .tryon-viewer{min-height:510px}
+ .tryon-viewer .modal-camera-column{height:100%}
+ .tryon-modal .modal-details{min-height:510px}
+ .tryon-media-actions{display:none}
+ .modal-bottom{margin-top:auto}
+}

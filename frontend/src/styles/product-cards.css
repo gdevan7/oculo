@@ -1,0 +1,28 @@
+/* Clean front-facing product cards */
+.product-grid{gap:30px 24px}
+.product-card{border:1px solid #ececec;background:#fff;padding:0 0 17px;display:flex;flex-direction:column}
+.product-image{height:245px;margin:0;background:#fff!important;border-bottom:1px solid #f0f0f0}
+.product-model-preview{inset:2% 2% 3%;width:96%;height:95%}
+.product-index{top:13px;left:14px;color:#a3a3a3}
+.product-card-info-centered{display:flex;flex-direction:column;align-items:center;text-align:center;padding:15px 12px 10px;gap:0}
+.product-card-info-centered .product-category{font-size:8px;letter-spacing:1.4px}
+.product-card-info-centered h3{font:600 16px Manrope;margin:7px 0 2px}
+.product-card-info-centered p{font-size:11px;color:#777;margin:0}
+.product-card-info-centered .product-price{font:700 16px Manrope;padding:0;margin-top:15px;color:#222}
+.product-card-bottom-centered{border:0;padding:0 17px;display:flex;align-items:center;justify-content:space-between;margin-top:auto}
+.product-color-count{font-size:12px;font-weight:600;color:#4b4b4b}
+.product-card-bottom-centered .tryon-button{padding:8px 14px}
+@media(max-width:680px){.product-image{height:265px}.product-grid{gap:22px}.product-card{padding-bottom:15px}}
+
+.catalog-hero-visual{background:#f1eee8;display:block}
+.catalog-hero-person{display:block;width:100%;height:100%;object-fit:cover;object-position:center 48%}
+
+/* Ensure the catalog hero portrait fills its visual panel in production builds */
+.catalog-hero-visual{position:relative;display:block!important;height:285px;min-height:285px;overflow:hidden;background:#f1eee8}
+.catalog-hero-visual .catalog-hero-person{position:absolute!important;inset:0!important;display:block!important;width:100%!important;height:100%!important;min-width:100%;min-height:100%;max-width:none;object-fit:cover;object-position:center 43%;opacity:1;visibility:visible;z-index:2}
+@media(max-width:760px){.catalog-hero-visual{height:220px;min-height:220px}}
+
+/* Preserve the full portrait in the catalog hero instead of vertically cropping it */
+.catalog-hero-visual{width:100%;height:auto!important;min-height:0!important;aspect-ratio:16/9;overflow:hidden}
+.catalog-hero-visual .catalog-hero-person{object-fit:contain!important;object-position:center center!important;width:100%!important;height:100%!important}
+@media(max-width:760px){.catalog-hero-visual{height:auto!important;min-height:0!important;aspect-ratio:16/9}}

@@ -1,0 +1,39 @@
+/* Real-time GLB product photography previews */
+.product-image {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  background:
+    radial-gradient(ellipse at 50% 44%, rgba(255,255,255,.96) 0%, rgba(247,246,242,.88) 43%, rgba(232,230,223,.82) 100%);
+}
+.product-image-tortoiseshell {
+  background: radial-gradient(ellipse at 50% 44%, #f4eee5 0%, #e8ded1 65%, #ded2c4 100%);
+}
+.product-image-black {
+  background: radial-gradient(ellipse at 50% 44%, #eeeff0 0%, #e0e2e4 65%, #d3d6d9 100%);
+}
+.product-model-preview {
+  position: absolute;
+  inset: 7% 2% 8%;
+  z-index: 1;
+  width: 96%;
+  height: 85%;
+}
+.product-model-preview canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+.product-model-preview .model-preview-fallback {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  color: #777;
+  font-size: 12px;
+}
+.product-image-caption {
+  z-index: 2;
+  pointer-events: none;
+}
+.product-index, .product-favorite { z-index: 3; }

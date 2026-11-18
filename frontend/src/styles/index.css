@@ -1,0 +1,11 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap');
+
+/* Order matters: later files override earlier ones, exactly as in the original single stylesheet. */
+@import "./base.css";
+@import "./catalog.css";
+@import "./product-preview.css";
+@import "./camera-consent.css";
+@import "./product-cards.css";
+@import "./navigation.css";
+@import "./tryon-mobile.css";
+@import "./tryon.css";
