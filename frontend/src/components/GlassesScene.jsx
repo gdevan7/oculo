@@ -103,8 +103,8 @@ export default function GlassesScene({ glasses, trackRef, enabled }) {
     };
     // (minCutoff Hz, beta): position in px, scale in ln(scale), angles in radians
     const filters = {
-      x: new OneEuro(1.2, 0.02), y: new OneEuro(1.2, 0.02), s: new OneEuro(1.0, 20),
-      yaw: new OneEuro(1.0, 8), pitch: new OneEuro(1.0, 8), roll: new OneEuro(1.0, 8),
+      x: new OneEuro(0.8, 0.01), y: new OneEuro(0.8, 0.01), s: new OneEuro(0.6, 12),
+      yaw: new OneEuro(0.4, 5), pitch: new OneEuro(0.4, 5), roll: new OneEuro(0.4, 5),
     };
     const smooth = (name, value, ts) => (FILTER ? filters[name].filter(value, ts) : value);
     const resetLeads = () => { Object.values(leads).forEach((l) => l.reset()); Object.values(filters).forEach((f) => f.reset()); };
