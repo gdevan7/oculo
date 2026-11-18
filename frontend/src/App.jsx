@@ -9,6 +9,7 @@ import TryOnModal from "./features/tryon/TryOnModal.jsx";
 import { fallbackCatalog } from "./data/glasses.js";
 import { getGlasses } from "./services/api.js";
 import { hasCameraConsent, grantCameraConsent } from "./lib/cameraConsent.js";
+import { normalizeCatalog } from "./lib/catalog.js";
 
 const scrollToTop = () => window.scrollTo({ top: 0, behavior: "smooth" });
 
@@ -38,11 +39,13 @@ export default function App() {
     }
   }, [page, scrollToAbout]);
 
+  // The API is the source of truth for the catalog. If it is unreachable, or returns nothing usable,
+  // the offline copy in data/glasses.js stays on screen.
   useEffect(() => {
     let live = true;
     getGlasses().then((data) => {
-      if (!live || !Array.isArray(data)) return;
-      setCatalog(fallbackCatalog.map((item) => { const row = data.find((entry) => entry.name === item.name || entry.id === item.id); return { ...item, ...(row || {}), model_url: item.model_url, price: item.price, subtitle: item.subtitle, colors: item.colors }; }));
+      const items = normalizeCatalog(data);
+      if (live && items.length) setCatalog(items);
     }).catch(() => {});
     return () => { live = false; };
   }, []);
