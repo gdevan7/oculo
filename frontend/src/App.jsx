@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { ArrowRight, Check, CheckCircle2, ChevronDown, Glasses, HelpCircle, ShieldCheck, Sparkles, UserRound, X, Heart } from "lucide-react";
+import { ArrowRight, Check, CheckCircle2, Glasses, HelpCircle, ShieldCheck, Sparkles, UserRound, X, Heart } from "lucide-react";
 import CameraStage from "./components/CameraStage.jsx";
 import ProductModelPreview from "./components/ProductModelPreview.jsx";
 import { getGlasses } from "./services/api.js";
@@ -257,7 +257,7 @@ export default function App() {
               <p>Frame Studio brings a curated collection of eyewear and an interactive fitting room into one simple experience. Choose a style, explore its colors, and preview the frame using your camera.</p>
             </div>
             <div className="about-points">
-              <div><Glasses size={21}/><span><strong>Seven signature frames</strong><small>A focused collection with four color options for every model.</small></span></div>
+              <div><Glasses size={21}/><span><strong>Signature frames</strong><small>A focused collection with color options for every model.</small></span></div>
               <div><Sparkles size={21}/><span><strong>Virtual try-on</strong><small>Preview your selected 3D frame in real time.</small></span></div>
               <div><ShieldCheck size={21}/><span><strong>Privacy-conscious camera</strong><small>Camera access starts only after your consent.</small></span></div>
             </div>
@@ -265,7 +265,7 @@ export default function App() {
         </>
       ) : (
         <section className="catalog-section catalog-only" id="collection">
-          <div className="catalog-section-heading"><div><span className="eyebrow">THE FRAME COLLECTION</span><h2>Find your signature frame.</h2><p>Seven signature frames. Four colors each. Try them on in real time.</p></div><span className="catalog-count">01 — 07 <ChevronDown size={14}/></span></div>
+          <div className="catalog-section-heading"><div><span className="eyebrow">THE FRAME COLLECTION</span><h2>Find your signature frame.</h2><p>Pick a frame, choose your color, and try it on in real time.</p></div></div>
           <div className="product-grid">
             {catalog.map((item, index) => (
               <article className="product-card" key={item.model_url || item.name}>
