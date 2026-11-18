@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { coverCrop } from "../src/lib/coverCrop.js";
+import { coverCrop } from "../../src/lib/coverCrop.js";
 
 test("same aspect ratio: scaled, no crop", () => {
   const c = coverCrop(1280, 720, 640, 360);

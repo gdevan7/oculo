@@ -5,7 +5,7 @@ import {
   browserStorage,
   grantCameraConsent,
   hasCameraConsent,
-} from "../src/lib/cameraConsent.js";
+} from "../../src/lib/cameraConsent.js";
 
 function memoryStorage(initial = {}) {
   const data = new Map(Object.entries(initial));

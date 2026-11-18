@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { ArrowRight, Check, CheckCircle2, Glasses, HelpCircle, ShieldCheck, Sparkles, UserRound, X, Heart } from "lucide-react";
-import CameraStage from "./components/CameraStage.jsx";
-import ProductModelPreview from "./components/ProductModelPreview.jsx";
+import CameraStage from "./features/tryon/CameraStage.jsx";
+import ProductModelPreview from "./features/catalog/ProductModelPreview.jsx";
 import { getGlasses } from "./services/api.js";
 import { hasCameraConsent, grantCameraConsent } from "./lib/cameraConsent.js";
 

@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { straightenedX } from "../src/lib/straightenArms.js";
+import { straightenedX } from "../../src/lib/straightenArms.js";
 
 // Right arm drifting outward 0.1 mm per mm of depth behind the hinge (z = -12), mirrored on the left.
 const arm = (side) => [-15, -30, -60, -100, -140].map((z) => ({ x: side * (73 + 0.1 * (-12 - z)), y: 10, z }));

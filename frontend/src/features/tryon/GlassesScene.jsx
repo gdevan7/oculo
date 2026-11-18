@@ -1,9 +1,9 @@
 import { useEffect, useRef } from "react";
 import * as THREE from "three";
 import { loadGlbFrame, disposeGlbCache } from "./glbFrame.js";
-import { Lead, isPredictionEnabled } from "../lib/lead.js";
-import { coverCrop } from "../lib/coverCrop.js";
-import { OneEuro, isFilterEnabled } from "../lib/oneEuro.js";
+import { Lead, isPredictionEnabled } from "../../lib/lead.js";
+import { coverCrop } from "../../lib/coverCrop.js";
+import { OneEuro, isFilterEnabled } from "../../lib/oneEuro.js";
 
 const EYE_MM = 90;
 const GLASSES_Z = 20;

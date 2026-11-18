@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { OneEuro, isFilterEnabled } from "../src/lib/oneEuro.js";
+import { OneEuro, isFilterEnabled } from "../../src/lib/oneEuro.js";
 
 let seed = 7;
 const rnd = () => ((seed = (seed * 1664525 + 1013904223) >>> 0) / 4294967296) - 0.5;

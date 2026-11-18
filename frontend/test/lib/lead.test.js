@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { Lead, isPredictionEnabled, MAX_HORIZON_S } from "../src/lib/lead.js";
+import { Lead, isPredictionEnabled, MAX_HORIZON_S } from "../../src/lib/lead.js";
 
 const D2R = Math.PI / 180;
 // Feeds a value moving at `speed` units/s, one sample every `stepMs`, for `ms` milliseconds.

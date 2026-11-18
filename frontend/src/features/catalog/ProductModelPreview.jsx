@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import * as THREE from "three";
 import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
-import { straightenedX } from "../lib/straightenArms.js";
+import { straightenedX } from "../../lib/straightenArms.js";
 
 // Moves the flared temple arms (Evergreen) in line with the frame. Works in the model's own units.
 function straightenModelArms(model, frontZ, unit) {

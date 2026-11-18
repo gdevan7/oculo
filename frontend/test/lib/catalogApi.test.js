@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { fetchGlasses } from "../src/lib/catalogApi.js";
+import { fetchGlasses } from "../../src/lib/catalogApi.js";
 
 const ok = (body) => async () => ({ ok: true, json: async () => body });
 

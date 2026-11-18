@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { cameraErrorMessage } from "../src/lib/cameraError.js";
+import { cameraErrorMessage } from "../../src/lib/cameraError.js";
 
 test("permission denied has its own message", () => {
   assert.equal(
