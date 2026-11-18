@@ -1,0 +1,13 @@
+{
+  "name": "virtual-glasses-try-on",
+  "private": true,
+  "description": "Convenience scripts for the frontend/ and backend/ apps. Each app keeps its own package.json and dependencies.",
+  "scripts": {
+    "test": "npm run test:backend && npm run test:frontend",
+    "test:backend": "npm --prefix backend test",
+    "test:frontend": "npm --prefix frontend test",
+    "dev:backend": "npm --prefix backend run dev",
+    "dev:frontend": "npm --prefix frontend run dev",
+    "build": "npm --prefix frontend run build"
+  }
+}

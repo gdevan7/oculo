@@ -22,6 +22,28 @@ Requirements: Node.js 20+ and a modern browser. Docker/PostgreSQL are optional.
 
 If `DATABASE_URL` is unset, the API uses an in-memory catalog. No database setup is required for a local demo. Camera access requires localhost or HTTPS, and the first run needs internet access to download the MediaPipe runtime/model.
 
+## Project structure
+```
+backend/            Express API (src/), SQL schema (sql/), tests (test/)
+frontend/
+  public/           Static files: 3D models (models/) and images
+  src/
+    pages/          Home and Catalog screens
+    components/     Shared UI: Header, Footer, LoginDialog
+    features/
+      catalog/      Product card and 3D product preview
+      tryon/        Camera, face tracking scene, consent dialog, try-on window
+    lib/            Pure logic with no React/Three.js: filters, crop math, storage, API calls
+    data/           Built-in catalog used when no API is configured
+    services/       API client
+    styles/         CSS files, imported in order by styles/index.css
+  test/lib/         Unit tests that mirror src/lib/
+docs/               Product requirements and implementation plan
+```
+
+## Tests
+Run everything from the repository root with `npm test`, or per app with `npm test` inside `backend/` or `frontend/`. Tests use Node's built-in runner (`node --test`), so they need no extra packages. Code that depends on React, Three.js or MediaPipe is not covered by unit tests; keep new logic in `frontend/src/lib/` so it can be tested.
+
 ## Existing PostgreSQL database
 The SQL seed now updates the `model_url` of existing catalog rows. Apply the updated `backend/sql/schema.sql` to the existing database, or run this targeted migration:
 
