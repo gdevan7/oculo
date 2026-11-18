@@ -1,6 +1,8 @@
 import { useEffect, useRef } from "react";
 import * as THREE from "three";
 import { loadGlbFrame, disposeGlbCache } from "./glbFrame.js";
+import { Lead, isPredictionEnabled } from "../lib/lead.js";
+import { coverCrop } from "../lib/coverCrop.js";
 
 const EYE_MM = 90;
 const GLASSES_Z = 20;
@@ -21,33 +23,8 @@ const FACE_HALF_MM = 60;
 // frames old when it is drawn. Each channel keeps a smoothed velocity and is drawn slightly
 // ahead along it. The lead is capped, and a dead band keeps a still head still.
 // Add ?nopredict to the page URL to switch it off for an A/B comparison.
-const PREDICT = typeof window === "undefined" || !new URLSearchParams(window.location.search).has("nopredict");
-const PREDICT_EXTRA_S = 0.02; // vsync/compositing delay that JS cannot see
+const PREDICT = typeof window === "undefined" || isPredictionEnabled(window.location.search);
 const TAU_POS = 0.012, TAU_ROT = 0.03, TAU_SCALE = 0.03; // render smoothing time constants (s)
-
-class Lead {
-  constructor(dead, cap) { this.dead = dead; this.cap = cap; this.reset(); }
-  reset() { this.v = 0; this.t = 0; this.vel = 0; this.has = false; }
-  push(value, timeMs) {
-    if (this.has) {
-      const dt = (timeMs - this.t) / 1000;
-      if (dt > 0.25) this.vel = 0;
-      else if (dt > 0.004) {
-        const raw = (value - this.v) / dt;
-        // Follow speed-ups slowly (less noise) but let go of the velocity faster when slowing down.
-        const tc = Math.abs(raw) >= Math.abs(this.vel) ? 0.12 : 0.05;
-        this.vel += (raw - this.vel) * (1 - Math.exp(-dt / tc));
-      }
-    }
-    this.v = value; this.t = timeMs; this.has = true;
-  }
-  at(nowMs, tau) {
-    if (!PREDICT) return this.v;
-    const h = Math.min((nowMs - this.t) / 1000 + PREDICT_EXTRA_S + tau, 0.25);
-    const mag = Math.max(0, Math.abs(this.vel) - this.dead);
-    return this.v + Math.max(-this.cap, Math.min(this.cap, Math.sign(this.vel) * mag * h));
-  }
-}
 
 export default function GlassesScene({ glasses, trackRef, enabled }) {
   const host = useRef(null);
@@ -113,8 +90,8 @@ export default function GlassesScene({ glasses, trackRef, enabled }) {
     const D2R = Math.PI / 180;
     // dead band / lead cap per channel: position in px, scale in ln(scale), angles in radians
     const leads = {
-      x: new Lead(12, 12), y: new Lead(12, 12), s: new Lead(0.05, 0.03),
-      yaw: new Lead(8 * D2R, 4 * D2R), pitch: new Lead(8 * D2R, 4 * D2R), roll: new Lead(8 * D2R, 4 * D2R),
+      x: new Lead(12, 12, PREDICT), y: new Lead(12, 12, PREDICT), s: new Lead(0.05, 0.03, PREDICT),
+      yaw: new Lead(8 * D2R, 4 * D2R, PREDICT), pitch: new Lead(8 * D2R, 4 * D2R, PREDICT), roll: new Lead(8 * D2R, 4 * D2R, PREDICT),
     };
     const resetLeads = () => Object.values(leads).forEach((l) => l.reset());
     let lastSample = null, lastFrame = performance.now();
@@ -147,11 +124,7 @@ export default function GlassesScene({ glasses, trackRef, enabled }) {
         // yaw angle extracted from the transformation matrix.
         const sourceW = t.videoWidth || w;
         const sourceH = t.videoHeight || h;
-        const coverScale = Math.max(w / sourceW, h / sourceH);
-        const renderedW = sourceW * coverScale;
-        const renderedH = sourceH * coverScale;
-        const cropX = (renderedW - w) / 2;
-        const cropY = (renderedH - h) / 2;
+        const { coverScale, renderedW, renderedH, cropX, cropY } = coverCrop(sourceW, sourceH, w, h);
 
         const toFacePoint = (landmark, target) => target.set(
           landmark.x * sourceW,

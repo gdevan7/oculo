@@ -2,6 +2,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { Camera, CameraOff, Download, RotateCcw } from "lucide-react";
 import { FaceLandmarker, FilesetResolver } from "@mediapipe/tasks-vision";
 import GlassesScene from "./GlassesScene.jsx";
+import { cameraErrorMessage } from "../lib/cameraError.js";
 
 const MODEL =
   "https://storage.googleapis.com/mediapipe-models/face_landmarker/face_landmarker/float16/1/face_landmarker.task";
@@ -131,11 +132,7 @@ export default function CameraStage({ glasses }) {
       stream.current?.getTracks().forEach((t) => t.stop());
       stream.current = null;
       setOn(false);
-      setError(
-        e?.name === "NotAllowedError"
-          ? "Camera permission denied. Allow access in browser settings."
-          : e.message || "Could not start camera."
-      );
+      setError(cameraErrorMessage(e));
       setStatus("Camera could not start");
     } finally {
       setBusy(false);

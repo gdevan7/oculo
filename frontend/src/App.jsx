@@ -3,6 +3,7 @@ import { ArrowRight, Check, CheckCircle2, ChevronDown, Glasses, HelpCircle, Shie
 import CameraStage from "./components/CameraStage.jsx";
 import ProductModelPreview from "./components/ProductModelPreview.jsx";
 import { getGlasses } from "./services/api.js";
+import { hasCameraConsent, grantCameraConsent } from "./lib/cameraConsent.js";
 
 const fallback = [
   {
@@ -90,8 +91,6 @@ const fallback = [
     ]
   }
 ];
-
-const CAMERA_CONSENT_KEY = "frame-studio-camera-consent-v1";
 
 function CameraConsent({ onAgree, onDisagree }) {
   useEffect(() => {
@@ -192,13 +191,12 @@ export default function App() {
   const [scrollToAbout, setScrollToAbout] = useState(false);
 
   const requestTryOn = (item) => {
-    const accepted = window.localStorage.getItem(CAMERA_CONSENT_KEY) === "accepted";
-    if (accepted) setActiveProduct(item);
+    if (hasCameraConsent()) setActiveProduct(item);
     else setConsentProduct(item);
   };
 
   const acceptCameraConsent = () => {
-    window.localStorage.setItem(CAMERA_CONSENT_KEY, "accepted");
+    grantCameraConsent();
     setActiveProduct(consentProduct);
     setConsentProduct(null);
   };
