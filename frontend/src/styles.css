@@ -375,3 +375,29 @@
  .tryon-viewer{min-height:0;height:100%}
  .tryon-modal .modal-details{min-height:0;overflow:auto}
 }
+
+/* Camera box: dark until the camera starts, one centered window, floating controls */
+.modal-camera-column .camera-stage{background:#0d0f12}
+.modal-camera-column .camera-placeholder{background:#0d0f12;color:#e8eaed}
+.modal-camera-column .placeholder-icon{background:#1a1e23;border-color:#2b3138;color:#cfd4da}
+.modal-camera-column .camera-placeholder h3{color:#f1f3f5}
+.modal-camera-column .camera-placeholder p{color:#9aa1a9}
+.modal-camera-column .privacy-note{background:#ffffff14;border-color:#ffffff22;color:#b4bac1}
+@media(min-width:681px){
+ .tryon-backdrop{padding:20px}
+ .tryon-modal{width:min(1360px,100%);height:min(860px,calc(100vh - 40px));grid-template-columns:minmax(0,1fr);background:#0d0f12;margin:auto}
+ .tryon-viewer,.modal-camera-column{background:#0d0f12}
+ .modal-camera-column .tryon-card{position:relative}
+ .modal-camera-column .stage-actions{position:absolute;left:0;right:0;bottom:88px;z-index:6;justify-content:center;padding:0;pointer-events:none}
+ .modal-camera-column .stage-actions>*{pointer-events:auto}
+ .modal-camera-column .primary-button{background:#fff;border-color:#fff;color:#1d2024;border-radius:999px;padding:12px 22px;font-weight:700}
+ .modal-camera-column .secondary-button{background:#fff;border-color:#fff;color:#1d2024;border-radius:999px;padding:12px 22px;box-shadow:0 4px 16px #0003}
+ .modal-camera-column .text-button{background:#111a;color:#fff;border-radius:999px;padding:12px 16px}
+ .tryon-modal .modal-details{position:absolute;left:50%;bottom:22px;transform:translateX(-50%);z-index:7;width:max-content;max-width:calc(100% - 40px);min-height:0;padding:7px;flex-direction:row;align-items:center;border-radius:999px;background:#12151acc;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);box-shadow:0 8px 30px #0005;overflow:visible}
+ .tryon-modal .modal-close{background:#fff;color:#17191d;width:46px;height:46px;top:18px;right:18px;box-shadow:0 5px 20px #0003}
+ .tryon-modal .color-options-heading{display:none}
+ .tryon-modal .modal-details>.modal-style-list{display:flex;flex-wrap:wrap;justify-content:center;gap:6px}
+ .tryon-modal .modal-style-chip{min-height:0;padding:9px 14px;border-radius:999px;border:1px solid transparent;background:#ffffff1f;color:#fff;font-size:11px}
+ .tryon-modal .modal-style-chip.active{background:#fff;color:#1d2024}
+ .tryon-modal .modal-style-chip svg{color:#1d2024}
+}
