@@ -10,7 +10,7 @@ const publicDir = fileURLToPath(new URL("../../frontend/public", import.meta.url
 test("the seed has the frames shown in the app, in display order", () => {
   assert.deepEqual(glassesSeed.map((g) => g.id), [
     "cloud", "frankie", "monroe", "noir", "browline", "heritage", "evergreen",
-    "maverick", "lola", "archer", "orbit", "sorbet", "navigator", "rebel", "apex", "horizon", "atlas",
+    "maverick", "lola", "archer", "orbit", "sorbet", "navigator", "rebel", "apex",
   ]);
   assert.deepEqual(glassesSeed.map((g) => g.sort_order), glassesSeed.map((_, i) => i));
 });

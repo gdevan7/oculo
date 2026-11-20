@@ -171,27 +171,5 @@ export const fallbackCatalog = [
       { id: "metallic-green", name: "Metallic Green", hex: "#2FA36B", model_url: "/models/model-14/model_14_metallic_green.glb" },
       { id: "yellow", name: "Yellow", hex: "#E8C72A", model_url: "/models/model-14/model_14_yellow.glb" }
     ]
-  },
-  {
-    id: "horizon", name: "Horizon", subtitle: "Sport Shield",
-    description: "A wrap-around sport shield with a bold single lens for full coverage.",
-    frame_color: "#4A8FEF", style: "shield", color_id: "black-blue-lens",
-    model_url: "/models/model-15/model_15_black_blue_lens.glb", price: 0,
-    colors: [
-      { id: "black-blue-lens", name: "Black Blue Lens", hex: "#4A8FEF", model_url: "/models/model-15/model_15_black_blue_lens.glb" },
-      { id: "black-red-mirror", name: "Black Red Mirror", hex: "#D93A40", model_url: "/models/model-15/model_15_black_red_mirror.glb" },
-      { id: "white-orange-lens", name: "White Orange Lens", hex: "#F5A445", model_url: "/models/model-15/model_15_white_orange_lens.glb" }
-    ]
-  },
-  {
-    id: "atlas", name: "Atlas", subtitle: "Retro Double Bridge",
-    description: "A retro double-bridge frame with warm tinted lenses and a 70s attitude.",
-    frame_color: "#8F6547", style: "retro", color_id: "amber-brown",
-    model_url: "/models/model-16/model_16_amber_brown.glb", price: 0,
-    colors: [
-      { id: "amber-brown", name: "Amber Brown", hex: "#8F6547", model_url: "/models/model-16/model_16_amber_brown.glb" },
-      { id: "forest-green", name: "Forest Green", hex: "#3A7A5B", model_url: "/models/model-16/model_16_forest_green.glb" },
-      { id: "navy-blue", name: "Navy Blue", hex: "#3B518F", model_url: "/models/model-16/model_16_navy_blue.glb" }
-    ]
   }
 ];

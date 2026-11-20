@@ -23,7 +23,7 @@ const FACE_HALF_MM = 60;
 // The block's front face sits DEFAULT_FACE_FRONT_MM behind the glasses' front plane (z = GLASSES_Z = 20),
 // i.e. at z = -1. Wrap-around frames such as Noir (model-3) curve back about 19 mm at the lens edges, so
 // the front face has to sit behind that curve or the block cuts jagged holes in the rim. Frames that
-// curve back further (Atlas, Horizon) set their own depth in lib/modelPresets.js.
+// curve back further can set their own depth (faceFrontMm) in lib/modelPresets.js.
 const faceBlockZ = (frontMm) => GLASSES_Z - frontMm - 50; // box is 100 deep, so its centre is 50 further back
 
 // Latency compensation. Detection runs on the main thread, so every pose is already a few

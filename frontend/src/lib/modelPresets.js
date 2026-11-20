@@ -25,8 +25,6 @@ const UPRIGHT = {
   "model-12": {},
   "model-13": {},
   "model-14": {},
-  "model-15": { faceFrontMm: 50 }, // Horizon: shield lens curves back about 47 mm
-  "model-16": { faceFrontMm: 27 }, // Atlas: rims curve back about 24 mm
 };
 
 // "/models/model-7/model_7_gold.glb?v=2" -> "model-7"

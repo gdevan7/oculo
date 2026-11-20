@@ -20,9 +20,9 @@ The application preserves the GLB geometry, materials, and textures. Only root o
 
 The three source files use different coordinate axes. Their orientation presets are configured in frontend/src/components/glbFrame.js. Verify all three in the browser from front and side views before release.
 
-## Models 7 to 16
+## Models 7 to 14
 
-Added to the repository by the project author, in folders `model-7` to `model-16` (one folder per frame, one GLB per color).
+Added to the repository by the project author, in folders `model-7` to `model-14` (one folder per frame, one GLB per color).
 
 | Folder | Catalog item | Colors |
 | --- | --- | --- |
@@ -34,8 +34,6 @@ Added to the repository by the project author, in folders `model-7` to `model-16
 | model-12 | Navigator (square aviator) | Black, Gold, Silver |
 | model-13 | Rebel (bold square) | Midnight Blue, Black Red Lens |
 | model-14 | Apex (sport half-rim) | Metallic Green, Yellow |
-| model-15 | Horizon (sport shield) | Black Blue Lens, Black Red Mirror, White Orange Lens |
-| model-16 | Atlas (retro double bridge) | Amber Brown, Forest Green, Navy Blue |
 
 Original creator, generation tool and license were not provided. Confirm permission to use and publicly distribute these assets before deployment.
 

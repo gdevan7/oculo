@@ -26,11 +26,6 @@ test("upright models get the default width and face block unless they override i
   assert.equal(uprightPreset("model-6").widthMm, 175);
 });
 
-test("wrap-around frames start the face block further back", () => {
-  assert.equal(uprightPreset("model-15").faceFrontMm, 50);
-  assert.equal(uprightPreset("model-16").faceFrontMm, 27);
-});
-
 test("rotated legacy folders and unknown folders have no upright preset", () => {
   for (const folder of ["model-0", "model-1", "model-2", "model-99", "models", "", "toString", "__proto__"]) {
     assert.equal(uprightPreset(folder), null, folder);
