@@ -68,3 +68,5 @@ A frame is `{ id, name, subtitle, description, style, price, sort_order, active,
 
 ## 3D models
 The GLB models and their attribution/license notes are documented in `frontend/public/models/ATTRIBUTION.md`. Confirm the models' license/usage terms before public deployment.
+
+To add a frame: put each color's GLB in `frontend/public/models/model-N/` (English file names, for example `model_17_gold.glb`), add the frame to the seed and to `frontend/src/data/glasses.js`, and add `"model-N"` to `frontend/src/lib/modelPresets.js` (a test fails if a catalog model has no preset). Frames whose lenses curve back a lot (wrap-around sport frames) need a larger `faceFrontMm` there, or the try-on's invisible face block cuts holes in the lenses.

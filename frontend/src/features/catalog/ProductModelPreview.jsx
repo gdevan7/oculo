@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import * as THREE from "three";
 import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
 import { straightenedX } from "../../lib/straightenArms.js";
+import { DEFAULT_WIDTH_MM, modelFolder, uprightPreset } from "../../lib/modelPresets.js";
 
 // Moves the flared temple arms (Evergreen) in line with the frame. Works in the model's own units.
 function straightenModelArms(model, frontZ, unit) {
@@ -100,13 +101,14 @@ export default function ProductModelPreview({ item }) {
 
     const modelPath = item.model_url.split("?")[0];
     const filename = modelPath.split("/").pop();
-    const folder = modelPath.split("/").slice(-2, -1)[0];
+    const folder = modelFolder(modelPath);
+    const upright = uprightPreset(folder);
     const rotation = folder === "model-0" ? PRESETS["model_0_black.glb"]
       : folder === "model-1" ? PRESETS["model_1_tortoiseshell.glb"]
       : folder === "model-2" ? PRESETS["model_2_black.glb"]
-      : ["model-3", "model-4", "model-5", "model-6"].includes(folder) ? new THREE.Matrix4()
+      : upright ? new THREE.Matrix4()
       : PRESETS[filename];
-    const targetWidthMm = folder === "model-6" ? 175 : 150;
+    const targetWidthMm = upright?.widthMm ?? DEFAULT_WIDTH_MM;
     if (!rotation) {
       setFailed(true);
       return () => {

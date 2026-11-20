@@ -4,6 +4,7 @@ import { loadGlbFrame, disposeGlbCache } from "./glbFrame.js";
 import { Lead, isPredictionEnabled } from "../../lib/lead.js";
 import { coverCrop } from "../../lib/coverCrop.js";
 import { OneEuro, isFilterEnabled } from "../../lib/oneEuro.js";
+import { DEFAULT_FACE_FRONT_MM } from "../../lib/modelPresets.js";
 
 const EYE_MM = 90;
 const GLASSES_Z = 20;
@@ -19,10 +20,11 @@ const ARM_VISIBLE_MM = 85;
 // narrower than the temple arms (narrowest is about 68 mm from the centre) so the
 // near arm is never hidden, but wide enough that a turned face hides the far arm.
 const FACE_HALF_MM = 60;
-// The block's front face (z, mm; the glasses' front plane is at GLASSES_Z = 20). Wrap-around
-// frames such as Noir (model-3) curve back about 19 mm at the lens edges, so the front face
-// has to sit behind that curve or the block cuts jagged holes in the rim.
-const FACE_FRONT_Z = -1;
+// The block's front face sits DEFAULT_FACE_FRONT_MM behind the glasses' front plane (z = GLASSES_Z = 20),
+// i.e. at z = -1. Wrap-around frames such as Noir (model-3) curve back about 19 mm at the lens edges, so
+// the front face has to sit behind that curve or the block cuts jagged holes in the rim. Frames that
+// curve back further (Atlas, Horizon) set their own depth in lib/modelPresets.js.
+const faceBlockZ = (frontMm) => GLASSES_Z - frontMm - 50; // box is 100 deep, so its centre is 50 further back
 
 // Latency compensation. Detection runs on the main thread, so every pose is already a few
 // frames old when it is drawn. Each channel keeps a smoothed velocity and is drawn slightly
@@ -70,7 +72,7 @@ export default function GlassesScene({ glasses, trackRef, enabled }) {
     // When the head turns, the far temple arm is hidden behind it instead of showing through the lens.
     const faceBlock = new THREE.Mesh(new THREE.BoxGeometry(1, 1, 1), new THREE.MeshBasicMaterial({ colorWrite: false }));
     faceBlock.scale.set(FACE_HALF_MM * 2, 180, 100);
-    faceBlock.position.set(0, 0, FACE_FRONT_Z - 50);
+    faceBlock.position.set(0, 0, faceBlockZ(DEFAULT_FACE_FRONT_MM));
     faceBlock.renderOrder = -1;
     pivot.add(faceBlock);
     const holder = new THREE.Group();
@@ -88,7 +90,11 @@ export default function GlassesScene({ glasses, trackRef, enabled }) {
       camera.updateProjectionMatrix();
     };
     const obs = new ResizeObserver(resize); obs.observe(el); resize();
-    const disposeModel = () => { if (model) holder.remove(model); model = null; };
+    const disposeModel = () => {
+      if (model) holder.remove(model);
+      model = null;
+      faceBlock.position.z = faceBlockZ(DEFAULT_FACE_FRONT_MM);
+    };
 
     const faceBasis = new THREE.Matrix4();
     const eyeLeft = new THREE.Vector3(), eyeRight = new THREE.Vector3();
@@ -120,6 +126,7 @@ export default function GlassesScene({ glasses, trackRef, enabled }) {
         if (k) loadGlbFrame(glasses.model_url).then((loaded) => {
           if (dead || mine !== loadToken) return;
           model = loaded; holder.add(loaded);
+          faceBlock.position.z = faceBlockZ(loaded.userData.faceFrontMm ?? DEFAULT_FACE_FRONT_MM);
         }).catch((error) => {
           if (!dead && mine === loadToken) console.error(`[Virtual Try-On] Failed to load GLB: ${glasses.model_url}`, error);
         });

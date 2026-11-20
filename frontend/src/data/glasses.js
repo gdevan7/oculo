@@ -85,5 +85,113 @@ export const fallbackCatalog = [
       { id: "gunmetal-grey", name: "Gunmetal Grey", hex: "#697178", model_url: "/models/model-6/model_6_gunmetal_grey.glb" },
       { id: "havana-brown", name: "Havana Brown", hex: "#806044", model_url: "/models/model-6/model_6_havana_brown.glb" }
     ]
+  },
+  {
+    id: "maverick", name: "Maverick", subtitle: "Classic Aviator",
+    description: "A timeless teardrop aviator with sun-washed yellow lenses.",
+    frame_color: "#17191D", style: "aviator", color_id: "black",
+    model_url: "/models/model-7/model_7_black.glb", price: 350000,
+    colors: [
+      { id: "black", name: "Black", hex: "#17191D", model_url: "/models/model-7/model_7_black.glb" },
+      { id: "gold", name: "Gold", hex: "#C6A15B", model_url: "/models/model-7/model_7_gold.glb" },
+      { id: "rose-gold", name: "Rose Gold", hex: "#B98278", model_url: "/models/model-7/model_7_rose_gold.glb" }
+    ]
+  },
+  {
+    id: "lola", name: "Lola", subtitle: "Retro Cat-Eye",
+    description: "A playful retro cat-eye with swept-up corners and clear lenses.",
+    frame_color: "#17191D", style: "cat-eye", color_id: "black",
+    model_url: "/models/model-8/model_8_black.glb", price: 250000,
+    colors: [
+      { id: "black", name: "Black", hex: "#17191D", model_url: "/models/model-8/model_8_black.glb" },
+      { id: "emerald-green", name: "Emerald Green", hex: "#2F6B52", model_url: "/models/model-8/model_8_emerald_green.glb" },
+      { id: "navy-blue", name: "Navy Blue", hex: "#3B4C80", model_url: "/models/model-8/model_8_navy_blue.glb" }
+    ]
+  },
+  {
+    id: "archer", name: "Archer", subtitle: "Slim Rectangle",
+    description: "A slim rectangular frame with warm sepia lenses and a quiet, modern profile.",
+    frame_color: "#7B5A41", style: "rectangle", color_id: "dark-brown",
+    model_url: "/models/model-9/model_9_dark_brown.glb", price: 200000,
+    colors: [
+      { id: "dark-brown", name: "Dark Brown", hex: "#7B5A41", model_url: "/models/model-9/model_9_dark_brown.glb" },
+      { id: "antique-gold", name: "Antique Gold", hex: "#C7AA68", model_url: "/models/model-9/model_9_antique_gold.glb" },
+      { id: "copper", name: "Copper", hex: "#C48762", model_url: "/models/model-9/model_9_copper.glb" }
+    ]
+  },
+  {
+    id: "orbit", name: "Orbit", subtitle: "Round Metal",
+    description: "Perfectly round metal frames with soft green-yellow tinted lenses.",
+    frame_color: "#17191D", style: "round", color_id: "black",
+    model_url: "/models/model-10/model_10_black.glb", price: 300000,
+    colors: [
+      { id: "black", name: "Black", hex: "#17191D", model_url: "/models/model-10/model_10_black.glb" },
+      { id: "gold", name: "Gold", hex: "#C6A15B", model_url: "/models/model-10/model_10_gold.glb" },
+      { id: "silver", name: "Silver", hex: "#AEB5BC", model_url: "/models/model-10/model_10_silver.glb" }
+    ]
+  },
+  {
+    id: "sorbet", name: "Sorbet", subtitle: "Slim Pastel",
+    description: "A slim, wide frame in soft pastel shades with rose-gradient lenses.",
+    frame_color: "#BCA6EA", style: "slim", color_id: "lavender",
+    model_url: "/models/model-11/model_11_lavender.glb", price: 250000,
+    colors: [
+      { id: "lavender", name: "Lavender", hex: "#BCA6EA", model_url: "/models/model-11/model_11_lavender.glb" },
+      { id: "white", name: "White", hex: "#F4F4F6", model_url: "/models/model-11/model_11_white.glb" },
+      { id: "aqua", name: "Aqua", hex: "#6FDCD2", model_url: "/models/model-11/model_11_aqua.glb" }
+    ]
+  },
+  {
+    id: "navigator", name: "Navigator", subtitle: "Square Aviator",
+    description: "An oversized square aviator with a double bridge and clear lenses.",
+    frame_color: "#17191D", style: "square-aviator", color_id: "black",
+    model_url: "/models/model-12/model_12_black.glb", price: 450000,
+    colors: [
+      { id: "black", name: "Black", hex: "#17191D", model_url: "/models/model-12/model_12_black.glb" },
+      { id: "gold", name: "Gold", hex: "#C6A15B", model_url: "/models/model-12/model_12_gold.glb" },
+      { id: "silver", name: "Silver", hex: "#AEB5BC", model_url: "/models/model-12/model_12_silver.glb" }
+    ]
+  },
+  {
+    id: "rebel", name: "Rebel", subtitle: "Bold Square",
+    description: "A bold square frame with gradient and tinted lenses for a confident look.",
+    frame_color: "#2F3A5A", style: "square", color_id: "midnight-blue",
+    model_url: "/models/model-13/model_13_midnight_blue.glb", price: 300000,
+    colors: [
+      { id: "midnight-blue", name: "Midnight Blue", hex: "#2F3A5A", model_url: "/models/model-13/model_13_midnight_blue.glb" },
+      { id: "black-red-lens", name: "Black Red Lens", hex: "#B83A3F", model_url: "/models/model-13/model_13_black_red_lens.glb" }
+    ]
+  },
+  {
+    id: "apex", name: "Apex", subtitle: "Sport Half-Rim",
+    description: "A lightweight sport half-rim with dark lenses and vivid frame colors.",
+    frame_color: "#2FA36B", style: "sport", color_id: "metallic-green",
+    model_url: "/models/model-14/model_14_metallic_green.glb", price: 400000,
+    colors: [
+      { id: "metallic-green", name: "Metallic Green", hex: "#2FA36B", model_url: "/models/model-14/model_14_metallic_green.glb" },
+      { id: "yellow", name: "Yellow", hex: "#E8C72A", model_url: "/models/model-14/model_14_yellow.glb" }
+    ]
+  },
+  {
+    id: "horizon", name: "Horizon", subtitle: "Sport Shield",
+    description: "A wrap-around sport shield with a bold single lens for full coverage.",
+    frame_color: "#4A8FEF", style: "shield", color_id: "black-blue-lens",
+    model_url: "/models/model-15/model_15_black_blue_lens.glb", price: 500000,
+    colors: [
+      { id: "black-blue-lens", name: "Black Blue Lens", hex: "#4A8FEF", model_url: "/models/model-15/model_15_black_blue_lens.glb" },
+      { id: "black-red-mirror", name: "Black Red Mirror", hex: "#D93A40", model_url: "/models/model-15/model_15_black_red_mirror.glb" },
+      { id: "white-orange-lens", name: "White Orange Lens", hex: "#F5A445", model_url: "/models/model-15/model_15_white_orange_lens.glb" }
+    ]
+  },
+  {
+    id: "atlas", name: "Atlas", subtitle: "Retro Double Bridge",
+    description: "A retro double-bridge frame with warm tinted lenses and a 70s attitude.",
+    frame_color: "#8F6547", style: "retro", color_id: "amber-brown",
+    model_url: "/models/model-16/model_16_amber_brown.glb", price: 350000,
+    colors: [
+      { id: "amber-brown", name: "Amber Brown", hex: "#8F6547", model_url: "/models/model-16/model_16_amber_brown.glb" },
+      { id: "forest-green", name: "Forest Green", hex: "#3A7A5B", model_url: "/models/model-16/model_16_forest_green.glb" },
+      { id: "navy-blue", name: "Navy Blue", hex: "#3B518F", model_url: "/models/model-16/model_16_navy_blue.glb" }
+    ]
   }
 ];
