@@ -12,7 +12,6 @@ export default function ProductCard({ item, index, onTryOn }) {
         <span className="product-category">FRAME STUDIO</span>
         <h3>{item.name}</h3>
         <p>{item.subtitle}</p>
-        <strong className="product-price">{item.price ? new Intl.NumberFormat("id-ID", { style: "currency", currency: "IDR", maximumFractionDigits: 0 }).format(item.price) : "Harga belum tersedia"}</strong>
       </div>
       <div className="product-card-bottom product-card-bottom-centered">
         <span className="product-color-count">{item.colors?.length || 0} colors</span>

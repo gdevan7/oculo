@@ -8,7 +8,7 @@ export const glassesSeed = [
     "subtitle": "Everyday Essential",
     "description": "A clean, lightweight frame for an effortless everyday look.",
     "style": "classic",
-    "price": 300000,
+    "price": 0,
     "sort_order": 0,
     "active": true,
     "colors": [
@@ -44,7 +44,7 @@ export const glassesSeed = [
     "subtitle": "Modern Tortoise",
     "description": "Warm tortoiseshell details with a timeless silhouette.",
     "style": "tortoise",
-    "price": 250000,
+    "price": 0,
     "sort_order": 1,
     "active": true,
     "colors": [
@@ -80,7 +80,7 @@ export const glassesSeed = [
     "subtitle": "Classic Black",
     "description": "A confident black frame that goes with just about everything.",
     "style": "black",
-    "price": 200000,
+    "price": 0,
     "sort_order": 2,
     "active": true,
     "colors": [
@@ -116,7 +116,7 @@ export const glassesSeed = [
     "subtitle": "Contemporary Acetate",
     "description": "A versatile silhouette with four distinctive finishes.",
     "style": "classic",
-    "price": 200000,
+    "price": 0,
     "sort_order": 3,
     "active": true,
     "colors": [
@@ -152,7 +152,7 @@ export const glassesSeed = [
     "subtitle": "Refined Browline",
     "description": "A defined browline profile with contrasting metal details.",
     "style": "tortoise",
-    "price": 500000,
+    "price": 0,
     "sort_order": 4,
     "active": true,
     "colors": [
@@ -188,7 +188,7 @@ export const glassesSeed = [
     "subtitle": "Modern Browline",
     "description": "A second browline design with a distinct frame construction.",
     "style": "tortoise",
-    "price": 300000,
+    "price": 0,
     "sort_order": 5,
     "active": true,
     "colors": [
@@ -224,7 +224,7 @@ export const glassesSeed = [
     "subtitle": "Everyday Metal",
     "description": "A clean everyday frame in understated natural tones.",
     "style": "classic",
-    "price": 350000,
+    "price": 0,
     "sort_order": 6,
     "active": true,
     "colors": [
@@ -260,7 +260,7 @@ export const glassesSeed = [
     "subtitle": "Classic Aviator",
     "description": "A timeless teardrop aviator with sun-washed yellow lenses.",
     "style": "aviator",
-    "price": 350000,
+    "price": 0,
     "sort_order": 7,
     "active": true,
     "colors": [
@@ -290,7 +290,7 @@ export const glassesSeed = [
     "subtitle": "Retro Cat-Eye",
     "description": "A playful retro cat-eye with swept-up corners and clear lenses.",
     "style": "cat-eye",
-    "price": 250000,
+    "price": 0,
     "sort_order": 8,
     "active": true,
     "colors": [
@@ -320,7 +320,7 @@ export const glassesSeed = [
     "subtitle": "Slim Rectangle",
     "description": "A slim rectangular frame with warm sepia lenses and a quiet, modern profile.",
     "style": "rectangle",
-    "price": 200000,
+    "price": 0,
     "sort_order": 9,
     "active": true,
     "colors": [
@@ -350,7 +350,7 @@ export const glassesSeed = [
     "subtitle": "Round Metal",
     "description": "Perfectly round metal frames with soft green-yellow tinted lenses.",
     "style": "round",
-    "price": 300000,
+    "price": 0,
     "sort_order": 10,
     "active": true,
     "colors": [
@@ -380,7 +380,7 @@ export const glassesSeed = [
     "subtitle": "Slim Pastel",
     "description": "A slim, wide frame in soft pastel shades with rose-gradient lenses.",
     "style": "slim",
-    "price": 250000,
+    "price": 0,
     "sort_order": 11,
     "active": true,
     "colors": [
@@ -410,7 +410,7 @@ export const glassesSeed = [
     "subtitle": "Square Aviator",
     "description": "An oversized square aviator with a double bridge and clear lenses.",
     "style": "square-aviator",
-    "price": 450000,
+    "price": 0,
     "sort_order": 12,
     "active": true,
     "colors": [
@@ -440,7 +440,7 @@ export const glassesSeed = [
     "subtitle": "Bold Square",
     "description": "A bold square frame with gradient and tinted lenses for a confident look.",
     "style": "square",
-    "price": 300000,
+    "price": 0,
     "sort_order": 13,
     "active": true,
     "colors": [
@@ -464,7 +464,7 @@ export const glassesSeed = [
     "subtitle": "Sport Half-Rim",
     "description": "A lightweight sport half-rim with dark lenses and vivid frame colors.",
     "style": "sport",
-    "price": 400000,
+    "price": 0,
     "sort_order": 14,
     "active": true,
     "colors": [
@@ -488,7 +488,7 @@ export const glassesSeed = [
     "subtitle": "Sport Shield",
     "description": "A wrap-around sport shield with a bold single lens for full coverage.",
     "style": "shield",
-    "price": 500000,
+    "price": 0,
     "sort_order": 15,
     "active": true,
     "colors": [
@@ -518,7 +518,7 @@ export const glassesSeed = [
     "subtitle": "Retro Double Bridge",
     "description": "A retro double-bridge frame with warm tinted lenses and a 70s attitude.",
     "style": "retro",
-    "price": 350000,
+    "price": 0,
     "sort_order": 16,
     "active": true,
     "colors": [
