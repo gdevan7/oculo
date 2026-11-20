@@ -1,6 +1,6 @@
-# Virtual Glasses Try-On 3D
+# Oculo
 
-Capstone Design MVP: webcam-based virtual eyewear try-on with React, Three.js, MediaPipe Face Landmarker, Express, and an optional PostgreSQL catalog.
+Capstone Design MVP: webcam-based virtual eyewear try-on in 3D with React, Three.js, MediaPipe Face Landmarker, Express, and an optional PostgreSQL catalog.
 
 ## Features
 - Browser-based virtual try-on using MediaPipe Face Landmarker.

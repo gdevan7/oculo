@@ -1,6 +1,6 @@
 # Supplied 3D model assets
 
-The three GLB files listed below were supplied by the project author for this Virtual Glasses Try-On project. They replace the previous demo/procedural frames.
+The three GLB files listed below were supplied by the project author for the Oculo project. They replace the previous demo/procedural frames.
 
 | File | Catalog item | Description |
 | --- | --- | --- |

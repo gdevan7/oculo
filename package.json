@@ -1,5 +1,5 @@
 {
-  "name": "virtual-glasses-try-on",
+  "name": "oculo",
   "private": true,
   "description": "Convenience scripts for the frontend/ and backend/ apps. Each app keeps its own package.json and dependencies.",
   "scripts": {

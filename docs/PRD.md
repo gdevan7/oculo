@@ -1,4 +1,4 @@
-# PRD: Virtual Glasses Try-On 3D
+# PRD: Oculo
 
 ## Objective
 Let a user preview multiple glasses styles on their face in real time using a webcam and a 3D overlay.
