@@ -3,10 +3,8 @@ import { Camera, CameraOff, Download, RotateCcw } from "lucide-react";
 import { FaceLandmarker, FilesetResolver } from "@mediapipe/tasks-vision";
 import GlassesScene from "./GlassesScene.jsx";
 import { cameraErrorMessage } from "../../lib/cameraError.js";
+import { MEDIAPIPE_SOURCES } from "../../lib/mediapipeSources.js";
 
-const MODEL =
-  "https://storage.googleapis.com/mediapipe-models/face_landmarker/face_landmarker/float16/1/face_landmarker.task";
-const WASM = "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.20/wasm";
 const DEFAULT_AR = "16/10";
 // Add ?debug to the page URL to show how long each face detection takes on this device.
 const DEBUG = typeof window !== "undefined" && new URLSearchParams(window.location.search).has("debug");
@@ -106,18 +104,28 @@ export default function CameraStage({ glasses }) {
       });
       if (!tracker.current) {
         setStatus("Loading face tracking model…");
-        const v = await FilesetResolver.forVisionTasks(WASM);
-        const make = (delegate) =>
-          FaceLandmarker.createFromOptions(v, {
-            baseOptions: { modelAssetPath: MODEL, delegate },
-            runningMode: "VIDEO",
-            numFaces: 1,
-          });
-        try {
-          tracker.current = await make("GPU");
-        } catch {
-          tracker.current = await make("CPU");
+        // Try our own server first, then the public CDNs; within each, GPU first and CPU as fallback.
+        let lastError;
+        for (const source of MEDIAPIPE_SOURCES) {
+          try {
+            const v = await FilesetResolver.forVisionTasks(source.wasm);
+            const make = (delegate) =>
+              FaceLandmarker.createFromOptions(v, {
+                baseOptions: { modelAssetPath: source.model, delegate },
+                runningMode: "VIDEO",
+                numFaces: 1,
+              });
+            try {
+              tracker.current = await make("GPU");
+            } catch {
+              tracker.current = await make("CPU");
+            }
+            break;
+          } catch (e) {
+            lastError = e;
+          }
         }
+        if (!tracker.current) throw lastError ?? Error("Face tracking model could not be loaded.");
       }
       video.current.srcObject = stream.current;
       await video.current.play();

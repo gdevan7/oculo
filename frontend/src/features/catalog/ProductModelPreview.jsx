@@ -45,10 +45,24 @@ const PRESETS = {
 export default function ProductModelPreview({ item }) {
   const hostRef = useRef(null);
   const [failed, setFailed] = useState(false);
+  // Browsers allow only ~16 WebGL contexts per page (fewer on phones). Each preview owns one, so a
+  // preview only gets its renderer while it is on (or near) the screen and gives it back afterwards.
+  const [visible, setVisible] = useState(() => typeof IntersectionObserver === "undefined");
 
   useEffect(() => {
     const host = hostRef.current;
-    if (!host || !item?.model_url) return undefined;
+    if (!host || typeof IntersectionObserver === "undefined") return undefined;
+    const watcher = new IntersectionObserver(
+      ([entry]) => setVisible(entry.isIntersecting),
+      { rootMargin: "200px" }
+    );
+    watcher.observe(host);
+    return () => watcher.disconnect();
+  }, []);
+
+  useEffect(() => {
+    const host = hostRef.current;
+    if (!host || !item?.model_url || !visible) return undefined;
 
     setFailed(false);
     let disposed = false;
@@ -187,9 +201,10 @@ export default function ProductModelPreview({ item }) {
         });
       }
       renderer?.dispose();
+      renderer?.forceContextLoss(); // dispose() alone keeps the WebGL context alive until garbage collection
       renderer?.domElement.remove();
     };
-  }, [item?.id, item?.model_url]);
+  }, [item?.id, item?.model_url, visible]);
 
   return (
     <div className="product-model-preview" ref={hostRef} aria-label={item.name + " 3D model preview"}>

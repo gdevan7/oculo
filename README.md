@@ -20,6 +20,9 @@ Requirements: Node.js 20+ and a modern browser. Docker/PostgreSQL are optional.
 
 The frontend works without the API: with no `VITE_API_BASE_URL`, or when the API is unreachable, it shows the offline catalog in `frontend/src/data/glasses.js`. Camera access requires localhost or HTTPS, and the first run needs internet access to download the MediaPipe runtime/model.
 
+### Face tracker files (MediaPipe)
+`npm run dev` and `npm run build` first run `frontend/scripts/fetch-mediapipe.mjs`, which copies the WASM runtime from `node_modules` and downloads `face_landmarker.task` into `frontend/public/mediapipe/` (git-ignored). The try-on loads them from your own server and only falls back to the public CDNs if they are missing. Run the dev server or a build once with internet access before an event or offline demo.
+
 ## Project structure
 ```
 backend/
