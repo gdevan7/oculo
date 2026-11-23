@@ -1,9 +1,11 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import { Camera, CameraOff, Download, RotateCcw } from "lucide-react";
-import { FaceLandmarker, FilesetResolver } from "@mediapipe/tasks-vision";
+import { Camera, CameraOff, Download, RotateCcw, Upload } from "lucide-react";
 import GlassesScene from "./GlassesScene.jsx";
+import PhotoResult from "./PhotoResult.jsx";
+import { createFaceTracker } from "./faceTracker.js";
+import { canvasFromFile, canvasFromVideo, createPhotoTryOn } from "./photoTryOn.js";
 import { cameraErrorMessage } from "../../lib/cameraError.js";
-import { MEDIAPIPE_SOURCES } from "../../lib/mediapipeSources.js";
+import { PhotoError, photoErrorMessage } from "../../lib/photoInput.js";
 
 const DEFAULT_AR = "16/10";
 // Add ?debug to the page URL to show how long each face detection takes on this device.
@@ -27,6 +29,13 @@ export default function CameraStage({ glasses }) {
   const [status, setStatus] = useState("Camera is off");
   const [error, setError] = useState("");
   const [busy, setBusy] = useState(false);
+  // Still-photo try-on: `photo` is the result shown in the preview, `photoBusy` blocks a second request.
+  const [photo, setPhoto] = useState(null);
+  const [photoBusy, setPhotoBusy] = useState(false);
+  const photoBusyRef = useRef(false);
+  const mounted = useRef(true);
+  const photoUrl = useRef("");
+  const fileInput = useRef(null);
 
   const clearTrack = useCallback(() => {
     track.current = { lm: null, matrix: null };
@@ -104,28 +113,7 @@ export default function CameraStage({ glasses }) {
       });
       if (!tracker.current) {
         setStatus("Loading face tracking model…");
-        // Try our own server first, then the public CDNs; within each, GPU first and CPU as fallback.
-        let lastError;
-        for (const source of MEDIAPIPE_SOURCES) {
-          try {
-            const v = await FilesetResolver.forVisionTasks(source.wasm);
-            const make = (delegate) =>
-              FaceLandmarker.createFromOptions(v, {
-                baseOptions: { modelAssetPath: source.model, delegate },
-                runningMode: "VIDEO",
-                numFaces: 1,
-              });
-            try {
-              tracker.current = await make("GPU");
-            } catch {
-              tracker.current = await make("CPU");
-            }
-            break;
-          } catch (e) {
-            lastError = e;
-          }
-        }
-        if (!tracker.current) throw lastError ?? Error("Face tracking model could not be loaded.");
+        tracker.current = await createFaceTracker();
       }
       video.current.srcObject = stream.current;
       await video.current.play();
@@ -169,14 +157,81 @@ export default function CameraStage({ glasses }) {
     a.click();
   }
 
-  useEffect(
-    () => () => {
+  function closePhoto() {
+    setPhoto(null);
+    if (photoUrl.current) URL.revokeObjectURL(photoUrl.current);
+    photoUrl.current = "";
+  }
+
+  // Builds a photo with the frame on it. `getSource` returns the picture (a canvas) and runs right away,
+  // so a camera photo is the exact frame that was on screen when the button was pressed.
+  async function runPhoto(getSource, mirror) {
+    if (photoBusyRef.current) return;
+    photoBusyRef.current = true;
+    setPhotoBusy(true);
+    setError("");
+    setStatus("Creating your photo…");
+    // The tracker switches to still-image mode for a moment, so live detection pauses meanwhile.
+    cancelAnimationFrame(raf.current);
+    try {
+      const source = await getSource();
+      if (!tracker.current) {
+        try {
+          tracker.current = await createFaceTracker();
+        } catch {
+          throw new PhotoError("The face tracking model could not be loaded. Check your connection and try again.");
+        }
+      }
+      const result = await createPhotoTryOn({ tracker: tracker.current, source, modelUrl: glasses?.model_url });
+      if (!mounted.current) return; // the try-on window was closed while the photo was being made
+      if (photoUrl.current) URL.revokeObjectURL(photoUrl.current);
+      photoUrl.current = URL.createObjectURL(result.blob);
+      setPhoto({ url: photoUrl.current, width: result.width, height: result.height, yaw: result.yaw, mirror });
+    } catch (e) {
+      if (!(e instanceof PhotoError)) console.error("[Photo try-on]", e);
+      setError(photoErrorMessage(e));
+    } finally {
+      photoBusyRef.current = false;
+      // After the window is closed there is nothing to resume: the cleanup already stopped camera and tracker.
+      if (mounted.current) {
+        setPhotoBusy(false);
+        if (stream.current) {
+          last.current = -1;
+          raf.current = requestAnimationFrame(tick);
+          setStatus(hasFace.current ? "Face detected · tracking active" : "Camera active · looking for face");
+        } else {
+          setStatus("Camera is off");
+        }
+      }
+    }
+  }
+
+  function takePhoto() {
+    const v = video.current;
+    if (!v || v.readyState < 2) {
+      setError("Start the camera before taking a photo.");
+      return;
+    }
+    // A camera photo is shown mirrored first, like the live preview the person was looking at.
+    runPhoto(() => canvasFromVideo(v), true);
+  }
+
+  function onPhotoFile(event) {
+    const file = event.target.files?.[0];
+    event.target.value = ""; // lets the same file be chosen again
+    if (file) runPhoto(() => canvasFromFile(file), false);
+  }
+
+  useEffect(() => {
+    mounted.current = true;
+    return () => {
+      mounted.current = false;
       cancelAnimationFrame(raf.current);
       stream.current?.getTracks().forEach((t) => t.stop());
       tracker.current?.close();
-    },
-    []
-  );
+      if (photoUrl.current) URL.revokeObjectURL(photoUrl.current);
+    };
+  }, []);
 
   return (
     <section className="tryon-card">
@@ -238,6 +293,17 @@ export default function CameraStage({ glasses }) {
             Stop camera
           </button>
         )}
+        {on && (
+          <button className="secondary-button" onClick={takePhoto} disabled={photoBusy}>
+            <Camera size={17} />
+            {photoBusy ? "Working…" : "Take photo"}
+          </button>
+        )}
+        <button className="text-button" onClick={() => fileInput.current?.click()} disabled={photoBusy}>
+          <Upload size={15} />
+          Upload photo
+        </button>
+        <input ref={fileInput} type="file" accept="image/*" hidden onChange={onPhotoFile} />
         <button
           className="text-button"
           onClick={() => {
@@ -250,6 +316,7 @@ export default function CameraStage({ glasses }) {
           Reset fit
         </button>
       </div>
+      {photo && <PhotoResult photo={photo} onClose={closePhoto} />}
     </section>
   );
 }

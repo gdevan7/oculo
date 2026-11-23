@@ -1,0 +1,14 @@
+/* Preview of the still-photo try-on (PhotoResult.jsx). It is rendered into <body>, above the try-on window. */
+.photo-backdrop{position:fixed;inset:0;z-index:3000;display:grid;place-items:center;padding:16px;background:rgba(10,12,16,.82)}
+.photo-card{display:flex;flex-direction:column;gap:12px;width:min(960px,100%);max-height:100%;padding:14px;border-radius:14px;background:#fff;color:#1d2024}
+.photo-frame{display:grid;place-items:center;min-height:0;overflow:hidden;border-radius:8px;background:#0d0f12}
+.photo-frame img{display:block;max-width:100%;max-height:calc(100vh - 190px);width:auto;height:auto;object-fit:contain}
+.photo-frame img.is-mirrored{transform:scaleX(-1)}
+.photo-hint{margin:0;font-size:13px;color:#8a5a00}
+.photo-note{margin:0;font-size:11px;color:#6b7280}
+.photo-actions{display:flex;flex-wrap:wrap;gap:8px}
+.photo-btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:11px 18px;border:1px solid #d1d5db;border-radius:999px;background:#fff;color:#1d2024;font-size:13px;font-weight:600}
+.photo-btn:hover:not(:disabled){background:#f3f4f6}
+.photo-btn:disabled{opacity:.6;cursor:default}
+.photo-btn-primary{border-color:#b78a55;background:#b78a55;color:#fff}
+.photo-btn-primary:hover:not(:disabled){background:#9b7043}

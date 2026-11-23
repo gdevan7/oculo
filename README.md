@@ -9,6 +9,7 @@ Capstone Design MVP: webcam-based virtual eyewear try-on in 3D with React, Three
 - Express REST API for catalog CRUD.
 - Optional PostgreSQL persistence.
 - Screenshot download and camera stop control.
+- Photo try-on: **Take photo** (camera on) or **Upload photo** puts the chosen 3D frame on a still picture and lets you download it as a PNG. Face detection and rendering run in the browser; the picture is never uploaded. The pose maths is in `frontend/src/lib/facePose.js`, the scene shared with the live view in `features/tryon/glassesRig.js`, and the photo pipeline in `features/tryon/photoTryOn.js`. Pictures larger than 2048 px are shrunk first.
 
 ## Run locally
 Requirements: Node.js 20+ and a modern browser. Docker/PostgreSQL are optional.
