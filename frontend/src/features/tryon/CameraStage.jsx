@@ -176,11 +176,17 @@ export default function CameraStage({ glasses }) {
     try {
       const source = await getSource();
       if (!tracker.current) {
+        let created;
         try {
-          tracker.current = await createFaceTracker();
+          created = await createFaceTracker();
         } catch {
           throw new PhotoError("The face tracking model could not be loaded. Check your connection and try again.");
         }
+        if (!mounted.current) {
+          created.close(); // the window was closed while the model loaded: release it right away
+          return;
+        }
+        tracker.current = created;
       }
       const result = await createPhotoTryOn({ tracker: tracker.current, source, modelUrl: glasses?.model_url });
       if (!mounted.current) return; // the try-on window was closed while the photo was being made
@@ -197,6 +203,7 @@ export default function CameraStage({ glasses }) {
         setPhotoBusy(false);
         if (stream.current) {
           last.current = -1;
+          cancelAnimationFrame(raf.current); // never run two detection loops
           raf.current = requestAnimationFrame(tick);
           setStatus(hasFace.current ? "Face detected · tracking active" : "Camera active · looking for face");
         } else {
@@ -283,23 +290,23 @@ export default function CameraStage({ glasses }) {
       )}
       <div className="stage-actions">
         {!on ? (
-          <button className="primary-button" disabled={busy} onClick={start}>
+          <button className="primary-button" disabled={busy || photoBusy} onClick={start}>
             <Camera size={17} />
             {busy ? "Starting…" : "Start camera"}
           </button>
         ) : (
-          <button className="secondary-button" onClick={stop}>
+          <button className="secondary-button" disabled={photoBusy} onClick={stop}>
             <CameraOff size={17} />
             Stop camera
           </button>
         )}
         {on && (
-          <button className="secondary-button" onClick={takePhoto} disabled={photoBusy}>
+          <button className="secondary-button" onClick={takePhoto} disabled={photoBusy || busy}>
             <Camera size={17} />
             {photoBusy ? "Working…" : "Take photo"}
           </button>
         )}
-        <button className="text-button" onClick={() => fileInput.current?.click()} disabled={photoBusy}>
+        <button className="text-button" onClick={() => fileInput.current?.click()} disabled={photoBusy || busy}>
           <Upload size={15} />
           Upload photo
         </button>
