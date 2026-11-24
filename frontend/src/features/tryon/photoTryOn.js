@@ -1,7 +1,7 @@
 import * as THREE from "three";
 import { createGlassesRig, faceEuler } from "./glassesRig.js";
 import { loadGlbFrame } from "./glbFrame.js";
-import { detectFaceInImage } from "./faceTracker.js";
+import { detectFacesInImage } from "./faceTracker.js";
 import { facePose, headYawDegrees } from "../../lib/facePose.js";
 import { PhotoError, fitWithin, validateImageFile } from "../../lib/photoInput.js";
 
@@ -50,7 +50,10 @@ export async function createPhotoTryOn({ tracker, source, modelUrl }) {
   if (!modelUrl) throw new PhotoError("Choose a frame first.");
   const { width, height } = source;
 
-  const landmarks = await detectFaceInImage(tracker, source);
+  const faces = await detectFacesInImage(tracker, source);
+  // Up to five faces are found now, but choosing which one gets the frame is not built yet:
+  // for now the first one MediaPipe returns is used, as before.
+  const landmarks = faces[0];
   if (!landmarks) {
     throw new PhotoError("No face was found in this picture. Face the camera in good light, or try another photo.");
   }

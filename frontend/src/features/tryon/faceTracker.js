@@ -26,14 +26,18 @@ export async function createFaceTracker() {
   throw lastError ?? Error("Face tracking model could not be loaded.");
 }
 
-// Finds the face in one still image (canvas, image or bitmap) and returns its landmarks, or null.
-// The tracker is switched to still-image mode for the call and back to video mode afterwards, so the
-// caller must not run live detection on the same tracker at the same time.
-export async function detectFaceInImage(tracker, image) {
-  await tracker.setOptions({ runningMode: "IMAGE" });
+// How many faces a still photo is searched for. The live view tracks one face; a photo can have several.
+export const MAX_STILL_FACES = 5;
+
+// Finds the faces in one still image (canvas, image or bitmap) and returns a list of landmark arrays
+// (empty when there is no face). Up to MAX_STILL_FACES are returned, in the order MediaPipe gives them.
+// The tracker is switched to still-image mode (and to MAX_STILL_FACES) for the call and back to video
+// mode with one face afterwards, so the caller must not run live detection on the same tracker meanwhile.
+export async function detectFacesInImage(tracker, image) {
+  await tracker.setOptions({ runningMode: "IMAGE", numFaces: MAX_STILL_FACES });
   try {
-    return tracker.detect(image).faceLandmarks?.[0] ?? null;
+    return tracker.detect(image).faceLandmarks ?? [];
   } finally {
-    await tracker.setOptions({ runningMode: "VIDEO" });
+    await tracker.setOptions({ runningMode: "VIDEO", numFaces: 1 });
   }
 }
